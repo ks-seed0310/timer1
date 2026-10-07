@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang=ja>
+    <head>
+        <meta charset=utf-8>
+        <title>デジタルタイマー</title>
+        <style>
+            html{
+                width:100vw;
+                height:100vh;
+            }
+            body{
+                max-width:100%;
+                min-height:100vh;
+            }
+            .boldtext{
+                font-family,sans-serif;
+                font-weight;
+            }
+            #timer_grtop{
+                text-align;
+                height;
+                display;
+            }
+            #timer_top{
+                width:95vw;
+                --width:95vw;
+                max-width:95vw;
+                height:100%;
+                display;
+            }
+            #timer_top.active2.lastlen2{
+                --fs(var(--width)/2.8);
+                font-size(--fs)
+            }
+            #timer_top.active2.lastlen3{
+                --fs(var(--width)/3.4);
+                font-size(--fs)
+            }
+            #timer_top.active2.lastlen4{
+                --fs(var(--width)/4.0);
+                font-size(--fs)
+            }
+            #timer_top.active3.lastlen2{
+                --fs(var(--width)/4.2);
+                font-size(--fs)
+            }
+            #timer_top.active3.lastlen3{
+                --fs(var(--width)/4.8);
+                font-size(--fs)
+            }
+            #timer_top.active3.lastlen4{
+                --fs(var(--width)/5.4);
+                font-size(--fs)
+            }
+            .btn{
+                border: 4px solid #8f9195;
+                border-radius:32px;
+                font-size:32px;
+                padding:8px 16px;
+                cursor;
+                margin-top:16px;
+                margin-bottom:8px;
+                font-family,sans-serif;
+                background-color:#f8f8f8;
+            }
+            #setting{
+                width:85%;
+                height:85%;
+                padding:0px;
+                border-radius:24px;
+                border:0px;
+            }
+            #setting::backdrop{
+                background(0,0,0,0.5)
+            }
+            #setting_top{
+                --max-width:100cqw;
+                --padding:16px;
+                max-width(var(--max-width)-var(--padding)*2);
+                width(var(--max-width)-var(--padding)*2);
+                padding(--padding);
+                max-height:100%;
+                height:100%;
+                overflow-y;
+                border-radius:24px;
+                box-shadow 0 0 0 2px #dfe1e5;
+            }
+            #setting_besideLineUp{
+                width:100%;
+                height;
+                display;
+                justify-content;
+                flex-wrap;
+            }
+            .settingDetails{
+                cursor;
+                width:100%;
+                padding-bottom:8px;
+            }
+            .inputNumberBox{
+                border: 4px solid #dfe1e5;
+                width:96px;
+                font-size:24px;
+                border-radius: 8px;
+                padding: 8px 16px;
+                margin: 0px;
+                font-family:'Noto Sans JP' !important;
+                margin-top:8px;
+                margin-bottom:8px;
+            }
+            form{
+                cursor;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <div>
+                <div id="timer_view">
+                    <div id="timer_grtop">
+                        <span id="timer_top" class="boldtext active3 lastlen2"><span id="timer_hour">00</span><span id="hour_min_join"><sp-e s=8 mirror>:</sp-e></span><span id="timer_minute">00</span><span id="min_sec_join"><sp-e s=8 mirror>:</sp-e></span><span id="timer_second">00</span></span>
+                    </div>
+                </div>
+                <div id="menuTop">
+                    <button class="btn" id="start">開始</button>
+                    <sp-e s=8></sp-e>
+                    <button class="btn" id="stop">停止</button>
+                    <sp-e s=8></sp-e>
+                    <button class="btn" id="reset">設定時間に戻す</button>
+                    <sp-e s=8></sp-e>
+                    <button class="btn" id="to_setting">設定</button>
+                </div>
+            </div>
+            <dialog id="setting">
+                <div id="setting_top">
+                    <div id="setting_besideLineUp">
+                        <details class="settingDetails">
+                            <summary>制限時間設定</summary>
+                            <form id="setting_timelimit" action="#" onsubmit="(function(event){event.preventDefault()})()">
+                                <label>
+                                    <input type="number" name="timelimit" id="setting_timelimit_h" class="inputNumberBox" min=0 value=0 />
+                                    <sp-e s=8 style="cursor:text;" mirror>時間</sp-e>
+                                </label>
+                                <label>
+                                    <input type="number" name="timelimit" id="setting_timelimit_m" class="inputNumberBox" min=0 value=0 />
+                                    <sp-e s=8 style="cursor:text;" mirror>分</sp-e>
+                                </label>
+                                <label>
+                                    <input type="number" name="timelimit" id="setting_timelimit_s" class="inputNumberBox" min=0 value=0 />
+                                    <sp-e s=8 style="cursor:text;" mirror>秒</sp-e>
+                                </label>
+                            </form>
+                        </details>
+                        <details class="settingDetails">
+                            <summary>タイマー表示設定</summary>
+                            <form id="setting_timerview" action="#" onsubmit="(function(event){event.preventDefault()})()">
+                                <label><input type="radio" name="timerview" value="auto" />自動</label>
+                                <label><input type="radio" name="timerview" value="hms" checked />hh:mm</label>
+                                <label><input type="radio" name="timerview" value="ms" />mm</label>
+                            </form>
+                        </details>
+                    </div>
+                </div>
+            </dialog>
+        </div>
+        <script>
+            const sounds_url={
+                s1:"https://ks-seed0310.github.io/audio_storage/kitchen_timer_alarm.txt",
+            }
+            const sounds_ts={
+                s1:"kitchen_timer_alarm",
+            }
+            const sounds={
+            }
+            async function clockSoundLoad(){
+                const su=Object.entries(sounds_url)
+                const cache=await caches.open("sound_data")
+                const param=new URLSearchParams(location.search)
+                const reload=param.get("reload")!=null
+                for (const [key,url] of su){
+                    try{
+                        const k=("/audio_storage/"+sounds_ts[key])
+                        if (!navigator.onLine&&!cache.match(k)){
+                            throw new Error("オフライン中かつキャッシュが存在しません。ネットワークに接続してください。")
+                        }else if(navigator.onLine&&(reload||!cache.match(k))){
+                            const re=await fetch(url)
+                            if (location.protocol.includes("http")){
+                                cache.put(k,re)
+                            }
+                            sounds[key]=new Audio(await re.text())
+                        }else{
+                            sounds[key]=new Audio(await (await cache.match(k)).text())
+                        }
+                    }catch(e){
+                    }
+                }
+            }
+            class HTMLSpaceElement extends HTMLElement{
+                connectedCallback(){
+                    const size=this.getAttribute("s")
+                    const mirror=this.getAttribute("mirror")!==null
+                    const add=(function(){
+                        if (!isNaN(Number(size))){
+                            return "px"
+                        }else{
+                            return ""
+                        }
+                    })()
+                    this.innerHTML=<span style="padding-left:${size}${add};padding-right:${mirror?size:0}${mirror?add:"px"}" class="HTMLSpaceElement_node">${this.innerHTML}</span>
+                }
+            }
+            customElements.define("sp-e",HTMLSpaceElement)
+            const g==>document.getElementById()
+            const timer={
+                top("timer_top"),
+                hour("timer_hour"),
+                min("timer_minute"),
+                sec("timer_second"),
+                hourMin("hour_min_join"), //HHの:部分
+                minSec("min_sec_join"), //MMの:部分
+            }
+            const cf={
+                active:3, //0(実行時に決める) 1:なし 2 3
+                hour:0,
+                min:0,
+                sec:0,
+                timerScore:0, //timerScore=hour3600+min60+sec
+                timerStop:0,
+                item_maxmin:{h:[0,9999],m:[0,59],s:[0,59]},
+            }
+            const maincache={
+                start:0,
+                sub:0,
+                firststart,
+                stoped,
+            }
+            function maincacheReset(){
+                maincache.start=0
+                maincache.sub=0
+                maincache.firststart=true
+                maincache.stoped=true
+            }
+            function toTimerActive2(){
+                timer.hourMin.style.display="none"
+                timer.hour.style.display="none"
+                timer.top.classList.remove("active3")
+                timer.top.classList.add("active2")
+                cf.active=2
+                cf.item_maxmin={h:[0,0],m:[0,9999],s:[0,59]}
+            }
+            function toTimerActive3(){
+                timer.hourMin.style.display=""
+                timer.hour.style.display=""
+                timer.top.classList.remove("active2")
+                timer.top.classList.add("active3")
+                cf.active=3
+                cf.item_maxmin={h:[0,9999],m:[0,59],s:[0,59]}
+            }
+            function timer_render(Score,renderMode,activer){
+                const all=(function(){
+                    if (Score!=undefined){
+                        return [Math.floor(Score/3600),Math.floor(Score%3600/60),Score%60]
+                    }else{
+                        return [cf.hour,cf.min,cf.sec]
+                    }
+                })()
+                const [h,m,s]=all.map(String)
+                const e=timer.top
+                const r=renderMode??(function(){
+                    if (e.classList.contains("lastlen2")){
+                        return 2
+                    }else if (e.classList.contains("lastlen3")){
+                        return 3
+                    }else if (e.classList.contains("lastlen4")){
+                        return 4
+                    }
+                })()//render Mode
+                const active=activer||(function(){
+                    if (cf.active===0||activer===0){
+                        if (h===0)return 2
+                        else return 3
+                    }else{
+                        return cf.active
+                    }
+                })
+                timer.sec.textContent=s.padStart(2,0)
+                timer.min.textContent=m.padStart(((active===2)?r:2),0)
+                timer.hour.textContent=h.padStart(((active===3)?r:2),0)
+            }
+            async function timer_main(){
+                const e=timer.top
+                const r=(function(){
+                    if (e.classList.contains("lastlen2")){
+                        return 2
+                    }else if (e.classList.contains("lastlen3")){
+                        return 3
+                    }else if (e.classList.contains("lastlen4")){
+                        return 4
+                    }
+                })()//render Mode
+                const active=(function(){
+                    if (cf.active===0){
+                        if (cf.hour===0)return 2
+                        else return 3
+                    }else{
+                        return cf.active
+                    }
+                })
+                cf.timerScore=cf.hour3600+cf.min60+cf.sec
+                if (maincache.firststart){
+                    maincache.start=performance.now()
+                    maincache.firststart=false
+                }else{
+                    maincache.start=performance.now()-maincache.sub
+                }
+                maincache.stoped=false
+                let lastscore
+                cf.timerStop=setInterval(()=>{
+                    const score=cf.timerScore-((performance.now()-maincache.start)/1000)
+                    lastscore=score
+                    //console.log(score,performance.now(),maincache.start,maincache.sub)
+                    timer_render(Math.round(score),r,active)
+                    if (score<0||maincache.stoped){
+                        maincache.stoped=true
+                        timer_render(0,r,active)
+                        clearInterval(cf.timerStop)
+                    }
+                },100)
+                await new Promise(r=>{
+                    const stop=setInterval(()=>{
+                        if (maincache.stoped){
+                            clearInterval(stop)
+                            r()
+                        }
+                    },100)
+                })
+                maincache.sub=(cf.timerScore-lastscore)*1000
+                //console.log("maincache sub:",maincache.sub)
+                if (lastscore<0){
+                    timer_render(0,r,active)
+                }
+            }
+            function timer_main_boot(bootmode=false){
+                if (bootmode){
+                    const elm=[...setel.timelimit.timelimit]
+                    const lim=[...setel.timelimit.timelimit].map(x=>Number(x.value))
+                    const col={ok:"green",ng:"red"}
+                    const key=["h","m","s"]
+                    const log=[]
+                    for (let i=0;i<3;i++){
+                        const el=elm[i]
+                        const inp=lim[i]
+                        const limit=cf.item_maxmin[key[i]]
+                        if (limit[0]<=inp&&inp<=limit[1]){
+                            el.style.borderColor=col.ok
+                            log.push(true)
+                        }else{
+                            el.style.borderColor=col.ng
+                            log.push(false)
+                        }
+                    }
+                    if (log.some(x=>x===false))return
+                    cf.hour=lim[0]
+                    cf.min=lim[1]
+                    cf.sec=lim[2]
+                }
+                maincacheReset()
+                let tg=0
+                if (cf.active===0){
+                }else if (cf.active===2){
+                    tg=cf.min
+                }else if (cf.active===3){
+                    tg=cf.hour
+                }
+                const tgs=String(tg)
+                timer.top.classList.remove("lastlen2","lastlen3","lastlen4")
+                if (tgs.length===1||tgs.length===2){
+                    timer.top.classList.add("lastlen2")
+                }else if (tgs.length===3){
+                    timer.top.classList.add("lastlen3")
+                }else if (tgs.length===4){
+                    timer.top.classList.add("lastlen4")    
+                }
+                timer_render()
+            }
+            function limupdate(){
+                const lim=cf.item_maxmin
+                const el=[...setel.timelimit.timelimit]
+                const key=["h","m","s"]
+                for (let i=0;i<3;i++){
+                    const e=el[i]
+                    const l=lim[key[i]]
+                    e.min=l[0]
+                    e.max=l[1]
+                }
+            }
+            const menuel={
+                start("start"),
+                stop("stop"),
+                reset("reset"),
+                setting("to_setting"),
+            }
+            const setel={
+                main("setting"),
+                timerview("setting_timerview"),
+                timelimit("setting_timelimit"),
+                timelimit_h("setting_timelimit_h"),
+                timelimit_m("setting_timelimit_m"),
+                timelimit_s("setting_timelimit_s"),
+            }
+            menuel.start.addEventListener("click",e=>{
+                menuel.start.disabled=true
+                menuel.stop.disabled=false
+                timer_main()
+            })
+            menuel.stop.addEventListener("click",e=>{
+                menuel.start.disabled=false
+                menuel.stop.disabled=true
+                maincache.stoped=true
+                clearInterval(cf.timerStop)
+            })
+            menuel.reset.addEventListener("click",e=>{
+                timer_main_boot()
+            })
+            menuel.setting.addEventListener("click",e=>{
+                setel.main.showModal()
+            })
+            setel.main.addEventListener("click",e=>{
+                if (e.target===setel.main){
+                    setel.main.close()
+                }
+            })
+            setel.timerview.addEventListener("change",e=>{
+                const mode=setel.timerview.timerview.value
+                console.log("change!")
+                if (mode==="auto"){
+                    cf.active=0
+                }else if (mode==="hms"){
+                    toTimerActive3()
+                }else if (mode==="ms"){
+                    toTimerActive2()
+                }
+                limupdate()
+                backup()
+            })
+            setel.timelimit_h.addEventListener("input",e=>{
+                e.target.value=Number(e.target.value)
+                timer_main_boot(true)
+            })
+            setel.timelimit_m.addEventListener("input",e=>{
+                e.target.value=Number(e.target.value)
+                timer_main_boot(true)
+            })
+            setel.timelimit_s.addEventListener("input",e=>{
+                e.target.value=Number(e.target.value)
+                timer_main_boot(true)
+            })
+            !async function(){
+                const c=JSON.parse(localStorage.getItem("/timer/v1/mainsave/cf"))
+                if (!c)return;
+                setel.timerview.timerview.value=(function(){
+                    const m=c.active
+                    if(m===0)return"auto"
+                    if(m===1)return"ignore"
+                    if(m===2)return"ms"
+                    if(m===3)return"hms"
+                })()
+                setel.timerview.dispatchEvent(new Event("change"))
+                if (c.active){
+                    cf.active=c.active
+                }
+                if (c.hour){
+                    cf.hour=c.hour
+                    setel.timelimit_h.value=c.hour
+                }
+                if (c.min){
+                    cf.min=c.min
+                    setel.timelimit_m.value=c.min
+                }
+                if (c.sec){
+                    cf.sec=c.sec
+                    setel.timelimit_s.value=c.sec
+                }
+                if (c.timerScore){
+                    cf.timerScore=c.timerScore
+                }
+                if (c.timerStop){
+                    cf.timerStop=c.timerStop
+                }
+                if (c.item_maxmin){
+                    cf.item_maxmin=c.item_maxmin
+                }
+                await clockSoundLoad()
+                setel.timerview.dispatchEvent(new Event("change"))
+                timer_main_boot()
+            }()
+            function backup(){
+                localStorage.setItem("/timer/v1/mainsave/cf",JSON.stringify(cf,0,0))
+            }
+            const autosave_stop=setInterval(backup,5000)
+            const buttonsys_stop=setInterval(()=>{
+                if (maincache.stoped){
+                    menuel.start.disabled=false
+                    menuel.reset.disabled=false
+                    menuel.stop.disabled=true
+                }else{
+                    menuel.start.disabled=true
+                    menuel.reset.disabled=true
+                    menuel.stop.disabled=false
+                }
+            },100)
+        </script>
+    </body>
+</html>
