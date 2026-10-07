@@ -2,7 +2,7 @@
 <html lang=ja>
     <head>
         <meta charset=utf-8>
-        <title>デジタルタイマー / Digital Timer v1.2.1</title>
+        <title>デジタルタイマー / Digital Timer v1.2.2</title>
         <style>
             html{
                 width:100vw;
@@ -200,6 +200,7 @@
                             <summary title="テンプレートから制限時間を選択、クリックで時間追加などができます。">クイックメニュー</summary>
                             <form id="setting_quickmenu" action="#" onsubmit="event.preventDefault()">
                                 <button onclick="btnpress(this);template_lim(0,0,0,false)" class="btnsmall">リセット</button>
+                                <button onclick="btnpress(this);timeLimitArrange()" class="btnsmall" title="1時間60分-30秒のようなぐちゃぐちゃになっているデータを、1時間59分30秒のように揃えます。">揃える</button>
                                 <br />
                                 <button onclick="btnpress(this);template_lim(0,0,30,false)" class="btnsmall">30秒</button>
                                 <button onclick="btnpress(this);template_lim(0,1,0,false)" class="btnsmall">1分</button>
@@ -738,6 +739,19 @@
                 H.value=add?(Number(H.value)+h):h
                 M.value=add?(Number(M.value)+m):m
                 S.value=add?(Number(S.value)+s):s
+                timer_main_boot(true)
+            }
+            function timeLimitArrange(){
+                const he=setel.timelimit_h
+                const me=setel.timelimit_m
+                const se=setel.timelimit_s
+                const h=Number(he.value)
+                const m=Number(me.value)
+                const s=Number(se.value)
+                const score=h*3600+m*60+s
+                he.value=Math.floor(score/3600)
+                me.value=Math.floor(score%3600/60)
+                se.value=score%60
                 timer_main_boot(true)
             }
             setel.soundmain.addEventListener("input",e=>{
