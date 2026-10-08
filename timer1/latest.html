@@ -2,7 +2,7 @@
 <html lang=ja>
     <head>
         <meta charset=utf-8>
-        <title>デジタルタイマー / Digital Timer v1.2.2</title>
+        <title>デジタルタイマー / Digital Timer v1.2.3</title>
         <style>
             html{
                 width:100vw;
@@ -19,14 +19,16 @@
             #timer_grtop{
                 text-align:center;
                 height:auto;
-                display:inline-block;
+                --old-display:inline-block;
+                display:flex;
+                justify-content:flex-start;
+                align-items:center;
             }
             #timer_top{
                 width:95vw;
                 --width:90vw;
                 max-width:95vw;
                 height:100%;
-                --sub:8px;
                 display:inline-block;
             }
             #timer_top.active2.lastlen2{
@@ -100,7 +102,7 @@
                 background:rgba(0,0,0,0.5)
             }
             #setting_top{
-                --max-width:100cqw; /*vwは全体の横幅、vqwは親要素の横幅*/
+                --max-width:100cqw; /*vwは全体の横幅、cqwは親要素の横幅*/
                 --padding:16px;
                 max-width:calc(var(--max-width)-var(--padding)*2);
                 width:calc(var(--max-width)-var(--padding)*2);
@@ -134,6 +136,10 @@
                 margin-top:8px;
                 margin-bottom:8px;
             }
+            .inputNumberBox[disabled]{
+                background-color:rgba(223,225,229,0.5);
+                color:rgba(0,0,0,0.3);
+            }
             form{
                 cursor:default;
             }
@@ -145,7 +151,26 @@
                 border:0px;
             }
             #powerwash_screen_top{
-                --max-width:100cqw; /*vwは全体の横幅、vqwは親要素の横幅*/
+                --max-width:100cqw; /*vwは全体の横幅、cqwは親要素の横幅*/
+                --padding:16px;
+                max-width:calc(var(--max-width)-var(--padding)*2);
+                width:calc(var(--max-width)-var(--padding)*2);
+                padding:var(--padding);
+                max-height:100%;
+                height:100%;
+                overflow-y:auto;
+                border-radius:24px;
+                box-shadow:inset 0 0 0 2px #dfe1e5;
+            }
+            #about{
+                width:85%;
+                height:85%;
+                padding:0px;
+                border-radius:24px;
+                border:0px;
+            }
+            #about_top{
+                --max-width:100cqw; /*vwは全体の横幅、cqwは親要素の横幅*/
                 --padding:16px;
                 max-width:calc(var(--max-width)-var(--padding)*2);
                 width:calc(var(--max-width)-var(--padding)*2);
@@ -174,11 +199,17 @@
                     <button class="btn" id="reset" title="タイマーの制限時間を設定時間にリセットします。">リセット</button>
                     <sp-e s=8></sp-e>
                     <button class="btn" id="to_setting" title="設定画面を開きます。">設定</button>
+                    <sp-e s=8></sp-e>
                 </div>
             </div>
             <dialog id="setting">
                 <div id="setting_top">
                     <div id="setting_besideLineUp">
+                        <div>
+                            <p>Setting - Online Digital Timer</p>
+                            <span id="setting_timelimit_print">残り時間: 00:00:00</span>
+                            <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
+                        </div>
                         <details class="settingDetails" open>
                             <summary title="タイマーの制限時間を指定します。">制限時間設定</summary>
                             <form id="setting_timelimit" action="#" onsubmit="event.preventDefault()">
@@ -199,32 +230,35 @@
                         <details class="settingDetails">
                             <summary title="テンプレートから制限時間を選択、クリックで時間追加などができます。">クイックメニュー</summary>
                             <form id="setting_quickmenu" action="#" onsubmit="event.preventDefault()">
-                                <button onclick="btnpress(this);template_lim(0,0,0,false)" class="btnsmall">リセット</button>
-                                <button onclick="btnpress(this);timeLimitArrange()" class="btnsmall" title="1時間60分-30秒のようなぐちゃぐちゃになっているデータを、1時間59分30秒のように揃えます。">揃える</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,0,0,false)" class="btnsmall qm1" enableAuto>リセット</button>
+                                <button onclick="btnpress('.qm1,.qm2');timeLimitArrange()" class="btnsmall qm1" title="1時間60分-30秒のようなぐちゃぐちゃになっているデータを、1時間59分30秒のように揃えます。" enableAuto>揃える</button>
                                 <br />
-                                <button onclick="btnpress(this);template_lim(0,0,30,false)" class="btnsmall">30秒</button>
-                                <button onclick="btnpress(this);template_lim(0,1,0,false)" class="btnsmall">1分</button>
-                                <button onclick="btnpress(this);template_lim(0,3,0,false)" class="btnsmall">3分</button>
-                                <button onclick="btnpress(this);template_lim(0,5,0,false)" class="btnsmall">5分</button>
-                                <button onclick="btnpress(this);template_lim(0,10,0,false)" class="btnsmall">10分</button>
-                                <button onclick="btnpress(this);template_lim(0,30,0,false)" class="btnsmall">30分</button>
-                                <button onclick="btnpress(this);template_lim(1,0,0,false)" class="btnsmall">1時間</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,0,10,false)" class="btnsmall qm1" enableAuto>10秒</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,0,30,false)" class="btnsmall qm1" enableAuto>30秒</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,1,0,false)" class="btnsmall qm1" enableAuto>1分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,3,0,false)" class="btnsmall qm1" enableAuto>3分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,5,0,false)" class="btnsmall qm1" enableAuto>5分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,10,0,false)" class="btnsmall qm1" enableAuto>10分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,30,0,false)" class="btnsmall qm1" enableAuto>30分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(1,0,0,false)" class="btnsmall qm1" enableAuto>1時間</button>
                                 <br />
-                                <button onclick="btnpress(this);template_lim(0,0,30,true)" class="btnsmall">+30秒</button>
-                                <button onclick="btnpress(this);template_lim(0,1,0,true)" class="btnsmall">+1分</button>
-                                <button onclick="btnpress(this);template_lim(0,3,0,true)" class="btnsmall">+3分</button>
-                                <button onclick="btnpress(this);template_lim(0,5,0,true)" class="btnsmall">+5分</button>
-                                <button onclick="btnpress(this);template_lim(0,10,0,true)" class="btnsmall">+10分</button>
-                                <button onclick="btnpress(this);template_lim(0,30,0,true)" class="btnsmall">+30分</button>
-                                <button onclick="btnpress(this);template_lim(1,0,0,true)" class="btnsmall">+1時間</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,0,10,true)" class="btnsmall qm2" enableAuto>+10秒</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,0,30,true)" class="btnsmall qm2" enableAuto>+30秒</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,1,0,true)" class="btnsmall qm2" enableAuto>+1分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,3,0,true)" class="btnsmall qm2" enableAuto>+3分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,5,0,true)" class="btnsmall qm2" enableAuto>+5分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,10,0,true)" class="btnsmall qm2" enableAuto>+10分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,30,0,true)" class="btnsmall qm2" enableAuto>+30分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(1,0,0,true)" class="btnsmall qm2" enableAuto>+1時間</button>
                                 <br />
-                                <button onclick="btnpress(this);template_lim(0,0,-30,true)" class="btnsmall">-30秒</button>
-                                <button onclick="btnpress(this);template_lim(0,-1,0,true)" class="btnsmall">-1分</button>
-                                <button onclick="btnpress(this);template_lim(0,-3,0,true)" class="btnsmall">-3分</button>
-                                <button onclick="btnpress(this);template_lim(0,-5,0,true)" class="btnsmall">-5分</button>
-                                <button onclick="btnpress(this);template_lim(0,-10,0,true)" class="btnsmall">-10分</button>
-                                <button onclick="btnpress(this);template_lim(0,-30,0,true)" class="btnsmall">-30分</button>
-                                <button onclick="btnpress(this);template_lim(-1,0,0,true)" class="btnsmall">-1時間</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,0,-10,true)" class="btnsmall qm2" enableAuto>-10秒</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,0,-30,true)" class="btnsmall qm2" enableAuto>-30秒</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,-1,0,true)" class="btnsmall qm2" enableAuto>-1分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,-3,0,true)" class="btnsmall qm2" enableAuto>-3分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,-5,0,true)" class="btnsmall qm2" enableAuto>-5分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,-10,0,true)" class="btnsmall qm2" enableAuto>-10分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(0,-30,0,true)" class="btnsmall qm2" enableAuto>-30分</button>
+                                <button onclick="btnpress('.qm1,.qm2');template_lim(-1,0,0,true)" class="btnsmall qm2" enableAuto>-1時間</button>
                             </form>
                         </details>
                         <details class="settingDetails">
@@ -237,10 +271,10 @@
                         </details>
                         <details class="settingDetails">
                             <summary title="タイマーが終了したときのアラート音や音量などを設定します。">サウンド設定</summary>
-                            <form id="setting_sound">
+                            <form id="setting_sound" action="#" onsubmit="event.preventDefault()">
                                 <input type=range min=0 max=1 step=0.05 value=0.5 name="soundvolume" style="width:60%" />
                                 <span id="setting_soundvolume_print">現在の設定値: 50%</span>
-                                <span style="font-size:24px;display:flex;align-items:center;" />
+                                <span style="font-size:20px;display:flex;align-items:center;" />
                                     <label><input type="radio" name="soundselect" value="s1" checked />サウンド1</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s1.play()" style="cursor:pointer;"></sp-e>
                                 </span>
                             </form>
@@ -248,18 +282,23 @@
                         <details class="settingDetails">
                             <summary title="タイマーが終了したときのアラート音の継続時間を設定します。">アラート継続時間</summary>
                             <span>分数で指定</span>
-                            <form id="setting_repeattime">
+                            <form id="setting_repeattime" action="#" onsubmit="event.preventDefault()">
                                 <input type=range min=0.5 max=30 step=0.5 value=1 name="repeattime" style="width:60%;" />
                                 <span id="setting_repeattime_print">現在の設定値: 1分</span>
                             </form>
                         </details>
                         <details class="settingDetails">
                             <summary title="タイマーサイズ調整">サイズ調整</summary>
-                            <p>開発中</p>
+                            <form id="setting_timersize" action="#" onsubmit="event.preventDefault()">
+                                <input type=range min=0.02 max=2 step=0.02 value=1 name="timersize" style="width:60%;" />
+                                <span id="setting_timersize_print">現在の設定値: 100%</span>
+                                <button class="btnsmall" id="setting_timersize_reset">リセット</button>
+                            </form>
                         </details>
                         <details class="settingDetails">
-                            <summary title="データ消去などの保存データ関連の設定です。">データ</summary>
-                            <button class="btn" id="powerwash" style="font-size:1rem;">データ全消去</button>
+                            <summary title="データ消去などの保存データ関連の設定です。">データ・情報</summary>
+                            <button class="btnsmall" id="powerwash" title="ブラウザに保存されている全ての保存データを削除します。">データ全消去</button>
+                            <button class="btnsmall" id="to_about" title="このプログラムの詳細ページを開きます。">詳細</button>
                         </details>
                         <button class="btn" id="to_home" style="font-size:1rem;" title="タイマーの画面に戻ります。">戻る</button>
                     </div>
@@ -267,23 +306,67 @@
             </dialog>
             <dialog id="powerwash_screen">
                 <div id="powerwash_screen_top">
-                    <span>削除中...</span>
+                    <p>Data Reset - Online Digital Timer</p>
+                    <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
+                    <span onclick="powerwash_i++;if (powerwash_i>6){g('powerwash_screen_secret_contents02').style.display='block'}">削除中...</span>
+                    <br />
+                    <span id="powerwash_screen_secret_contents02" style="display:none">!function(){clearInterval(autosave_stop);localStorage.removeItem("/timer/v1/mainsave/cf");location.reload()}()</span>
                     <br />
                     <br />
                     <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="powerwash_screen_rorateElement" style="display:flex;align-items:center;stroke:green;zoom:2;" onchange=(function(){i=Math.floor(Math.random()*8);j=Math.floor(Math.random()*8);window.stopKey=setInterval(function(){this.style.rotate=(j%360+"deg");j+=(i+=0.125)}.bind(this),20)}).call(this) onclick=g('powerwash_screen_secret_contents01').style.display='block'><circle cx="12" cy="12" r="10"></circle><line x1="6" y1="12" x2="9" y2="16"></line><line x1="9" y1="16" x2="18" y2="9"></line</svg>
                     <br />
                     <span id="powerwash_screen_secret_contents01" style="display:none">クソ手抜きローディングスピナー風の意味分からない回転(スクショしてみて)</span>
+                    
+                </div>
+            </dialog>
+            <dialog id="about">
+                <div id="about_top">
+                    <p>About - Online Digital Timer</p>
+                    <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
+                    <p>© Online Digital Timer 2026 seed</p>
+                    <p>このプログラムは、CC-BY SA 4.0 Licenseにより公開されています。</p>
+                    <p>プログラムの学習に使ったり、このタイマーをベースにして新しいものを作ったり...</p>
+                    <p>どうやって使っても良いです！楽しんで使ってください！</p>
+                    <details>
+                        <summary>CC-BY SA 4.0 Licenseとは?</summary>
+                        <p>簡単にまとめると、「商用利用もしていいし自由に使って良いよ！」というライセンスです。</p>
+                        <p>ただし、使うときには「クレジットの表記」が必須となります。(使う人に見えるところに書くのがルールです。)</p>
+                    </details>            
+                    <p>ただ、そんなクレジットを書かせるほど凄いプログラムでも有りません。</p>
+                    <p>ですので、以下のルールのみお守りいただけると幸いです。</p>
+                    <ul>
+                        <li>一部のコード抜き取りなどはクレジット不必要</li>
+                        <li>全体の抜き取り、このHTMLをベースとした改良の場合はクレジット必要(一番下の方にひっそり置くのでも良いです。見えれば良いです。)</li>
+                    </ul>
+                    <details>
+                        <summary>なぜ、わざわざCC-BY SA 4.0 License?</summary>
+                        <p>それは、著作権の学習になればいいかなと思ったからです。</p>
+                        <p>別にクレジットを書いてほしいとは何一つ思っていませんが、著作権表記を実際に練習してもらって実感するのがいいかなと思ったからです。</p>
+                        <p>別に書いてなかったって怒りません。練習や学習にでも役立てていただけると嬉しいです。</p>
+                    </details>
+                    <button class="btn" style="font-size:1rem;" onclick="menuel.about.close()">戻る</button>
                 </div>
             </dialog>
         </div>
         <script>
-            async function btnpress(el){
-                if (el.disabled!=undefined){
-                    el.disabled=true
-                }
-                await new Promise(r=>setTimeout(r,500))
-                if (el.disabled!=undefined){
-                    el.disabled=false
+            let powerwash_i=0
+            async function btnpress(el_or_selector){
+                if ((typeof el_or_selector)==="object"){
+                    const el=el_or_selector
+                    el.removeAttribute("enableAuto")
+                    if (el.disabled!=undefined){
+                        el.disabled=true
+                    }
+                    await new Promise(r=>setTimeout(r,500))
+                    if (el.disabled!=undefined){
+                        el.disabled=false
+                    }
+                    el.setAttribute("enableAuto","")
+                }else{
+                    if ((typeof el_or_selector)==="string"){
+                        const el=[...document.querySelectorAll(el_or_selector)]
+                        el.forEach(elem=>btnpress(elem))
+                    }
                 }
             }
             const sounds_url={
@@ -384,6 +467,7 @@
             customElements.define("sp-e",HTMLSpaceElement)
 
             const g=_=>document.getElementById(_)
+            const gc=_=>document.getElementsByClassName(_)
             const timer={
                 top:g("timer_top"),
                 hour:g("timer_hour"),
@@ -391,6 +475,7 @@
                 sec:g("timer_second"),
                 hourMin:g("hour_min_join"), //HH:MMの:部分
                 minSec:g("min_sec_join"), //MM:SSの:部分
+                setting_render:g("setting_timelimit_print"), //設定からも残り時間が見えるようにするため
             }
             const cf={
                 active:0, //0:auto(実行時に決める) 1:なし 2:ms 3:hms
@@ -402,6 +487,7 @@
                 timerStop:0,
                 usesoundcode:"s1",
                 repeattime_s:60,
+                timersize:1,
                 item_maxmin:{h:[0,9999],m:[0,59],s:[0,59]},
             }
             const maincache={
@@ -500,6 +586,7 @@
                 timer.sec.textContent=s.padStart(2,0)
                 timer.min.textContent=m.padStart(((active===2)?r:2),0)
                 timer.hour.textContent=h.padStart(((active===3)?r:2),0)
+                timer.setting_render.textContent="残り時間: "+timer.hour.textContent+":"+timer.min.textContent+":"+timer.sec.textContent
             }
             async function timer_main(){
                 const e=timer.top
@@ -650,6 +737,8 @@
                 setting:g("to_setting"),
                 home:g("to_home"),
                 powerwash:g("powerwash"),
+                about:g("about"),
+                toabout:g("to_about"),
             }
             const setel={
                 main:g("setting"),
@@ -662,7 +751,12 @@
                 soundvolumeprint:g("setting_soundvolume_print"),
                 repeattime:g("setting_repeattime"),
                 repeattime_print:g("setting_repeattime_print"),
-                template:g("setting_quickmenu"),
+                quickmenu:g("setting_quickmenu"),
+                quickmenu_01:[...gc("qm1")],
+                quickmenu_02:[...gc("qm2")],
+                timersize:g("setting_timersize"),
+                timersize_print:g("setting_timersize_print"),
+                timersize_reset:g("setting_timersize_reset"),
             }
             menuel.start.addEventListener("click",e=>{
                 menuel.start.disabled=true
@@ -702,6 +796,14 @@
                     }
                 }
             })
+            menuel.toabout.addEventListener("click",e=>{
+                menuel.about.showModal()
+            })
+            menuel.about.addEventListener("click",e=>{
+                if (e.target===menuel.about){
+                    menuel.about.close()
+                }
+            })
             setel.main.addEventListener("click",e=>{
                 if (e.target===setel.main){
                     setel.main.close()
@@ -739,9 +841,18 @@
                 H.value=add?(Number(H.value)+h):h
                 M.value=add?(Number(M.value)+m):m
                 S.value=add?(Number(S.value)+s):s
-                timer_main_boot(true)
+                if (maincache.stoped){
+                    timer_main_boot(true)
+                    backup()
+                }else{
+                    cf.hour=Number(H.value)
+                    cf.min=Number(M.value)
+                    cf.sec=Number(S.value)
+                    cf.timerScore=cf.hour*3600+cf.min*60+cf.sec
+                    timeLimitArrange(false)
+                }
             }
-            function timeLimitArrange(){
+            function timeLimitArrange(render=true){
                 const he=setel.timelimit_h
                 const me=setel.timelimit_m
                 const se=setel.timelimit_s
@@ -752,7 +863,10 @@
                 he.value=Math.floor(score/3600)
                 me.value=Math.floor(score%3600/60)
                 se.value=score%60
-                timer_main_boot(true)
+                if (render){
+                    timer_main_boot(true)
+                    backup()
+                }
             }
             setel.soundmain.addEventListener("input",e=>{
                 if (e.target.name==="soundvolume"){
@@ -771,6 +885,17 @@
                 cf.repeattime_s=Number(e.target.value)*60
                 setel.repeattime_print.textContent="現在の設定値: "+e.target.value+"分"
                 backup()
+            })
+            setel.timersize.addEventListener("input",e=>{
+                cf.timersize=Number(e.target.value)
+                setel.timersize_print.textContent="現在の設定値: "+Math.round(cf.timersize*100)+"%"
+                timer.top.style.zoom=cf.timersize
+            })
+            setel.timersize_reset.addEventListener("click",e=>{
+                cf.timersize=1
+                setel.timersize_print.textContent="現在の設定値: 100%"
+                setel.timersize.timersize.value=1
+                timer.top.style.zoom=1
             })
 
             const soundsOfflinePackage={
@@ -823,6 +948,12 @@
                     setel.repeattime.repeattime.value=(cf.repeattime_s/60).toFixed(1)
                     setel.repeattime_print.textContent="現在の設定値: "+(cf.repeattime_s/60).toFixed(1)+"分"
                 }
+                if (c.timersize){
+                    cf.timersize=c.timersize
+                    setel.timersize.timersize.value=c.timersize
+                    setel.timersize_print.textContent="現在の設定値: "+Math.round(cf.timersize*100)+"%"
+                    timer.top.style.zoom=cf.timersize
+                }
                 if (c.usesoundcode){
                     cf.usesoundcode=c.usesoundcode
                     setel.soundmain.soundselect.value=c.usesoundcode
@@ -856,7 +987,20 @@
                 }else{
                     menuel.start.textContent="再開"
                 }
-            },50)
+                if (maincache.stoped){
+                    setel.timelimit_h.disabled=false
+                    setel.timelimit_m.disabled=false
+                    setel.timelimit_s.disabled=false
+                    setel.quickmenu_01.forEach(el=>{if(el.getAttribute("enableAuto")!=null)el.disabled=false})
+                    setel.timerview.timerview.forEach(el=>el.disabled=false)
+                }else{
+                    setel.timelimit_h.disabled=true
+                    setel.timelimit_m.disabled=true
+                    setel.timelimit_s.disabled=true
+                    setel.quickmenu_01.forEach(el=>{if(el.getAttribute("enableAuto")!=null)el.disabled=true})
+                    setel.timerview.timerview.forEach(el=>el.disabled=true)
+                }
+            },100)
         </script>
     </body>
 </html>
