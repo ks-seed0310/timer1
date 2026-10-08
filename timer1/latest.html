@@ -138,7 +138,7 @@
                 cursor:pointer;
                 margin-top:16px;
                 margin-bottom:8px;
-                font-family:system-ui,sans-serif;
+                font-family:"Noto Sans JP",sans-serif;
                 background-color:#fafafa;
                 color:#202020;
             }
@@ -584,7 +584,7 @@
                             console.log(2)
                             const re=await fetch(url)
                             if (location.protocol.includes("http")){
-                                cache.put(k,re)
+                                cache.put(k,re.clone())
                             }
                             sounds[key]=new Audio(await re.text())
                             sounds_k.push(key)
