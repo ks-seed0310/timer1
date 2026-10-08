@@ -2,7 +2,7 @@
 <html lang=ja>
     <head>
         <meta charset=utf-8>
-        <title>デジタルタイマー / Digital Timer v1.2.5</title>
+        <title>デジタルタイマー / Digital Timer v1.2.5 stable2</title>
         <style>
             html{
                 width:100vw;
@@ -13,7 +13,7 @@
                 min-height:100vh;
             }
             .boldtext{
-                font-family:sans-serif,system-ui !important;
+                font-family:system-ui,sans-serif !important; /*font-family:sans-serif,system-ui !important;にしたら暴走したので気をつけて。(多分sans-serifフォントが暴走した)絶対に変えないように。*/
                 font-feature-settings: "tnum" 1 !important;
                 font-variant-numeric: tabular-nums !important;
                 font-weight:700;
@@ -55,60 +55,60 @@
             /*<dev-area> バグがなかったのでそのまま残す。*/
             /*.active2ではhourはそもそも描画しないが一応書いておく。*/
             .active2.lastlen2 #timer_hour{
-                --wi:calc(var(--fs) * 2 / 1.73);
+                --wi:calc(var(--fs) * 2 / 1.74);
             }
             .active2.lastlen3 #timer_hour{
-                --wi:calc(var(--fs) * 3 / 1.73);
+                --wi:calc(var(--fs) * 3 / 1.74);
             }
             .active2.lastlen4 #timer_hour{
-                --wi:calc(var(--fs) * 4 / 1.73);
+                --wi:calc(var(--fs) * 4 / 1.74);
             }
             .active3.lastlen2 #timer_hour{
-                --wi:calc(var(--fs) * 2 / 1.73);
+                --wi:calc(var(--fs) * 2 / 1.74);
             }
             .active3.lastlen3 #timer_hour{
-                --wi:calc(var(--fs) * 3 / 1.73);
+                --wi:calc(var(--fs) * 3 / 1.74);
             }
             .active3.lastlen4 #timer_hour{
-                --wi:calc(var(--fs) * 4 / 1.73);
+                --wi:calc(var(--fs) * 4 / 1.74);
             }
             
             .active2.lastlen2 #timer_minute{
-                --wi:calc(var(--fs) * 2 / 1.73);
+                --wi:calc(var(--fs) * 2 / 1.74);
             }
             .active2.lastlen3 #timer_minute{
-                --wi:calc(var(--fs) * 3 / 1.73);
+                --wi:calc(var(--fs) * 3 / 1.74);
             }
             .active2.lastlen4 #timer_minute{
-                --wi:calc(var(--fs) * 4 / 1.73);
+                --wi:calc(var(--fs) * 4 / 1.74);
             }
             .active3.lastlen2 #timer_minute{
-                --wi:calc(var(--fs) * 2 / 1.73);
+                --wi:calc(var(--fs) * 2 / 1.74);
             }
             .active3.lastlen3 #timer_minute{
-                --wi:calc(var(--fs) * 2 / 1.73);
+                --wi:calc(var(--fs) * 2 / 1.74);
             }
             .active3.lastlen4 #timer_minute{
-                --wi:calc(var(--fs) * 2 / 1.73);
+                --wi:calc(var(--fs) * 2 / 1.74);
             }
             
             .active2.lastlen2 #timer_second{
-                --wi:calc(var(--fs) * 2 / 1.73);
+                --wi:calc(var(--fs) * 2 / 1.74);
             }
             .active2.lastlen3 #timer_second{
-                --wi:calc(var(--fs) * 2 / 1.73);
+                --wi:calc(var(--fs) * 2 / 1.74);
             }
             .active2.lastlen4 #timer_second{
-                --wi:calc(var(--fs) * 2 / 1.73);
+                --wi:calc(var(--fs) * 2 / 1.74);
             }
             .active3.lastlen2 #timer_second{
-                --wi:calc(var(--fs) * 2 / 1.73);
+                --wi:calc(var(--fs) * 2 / 1.74);
             }
             .active3.lastlen3 #timer_second{
-                --wi:calc(var(--fs) * 2 / 1.73);
+                --wi:calc(var(--fs) * 2 / 1.74);
             }
             .active3.lastlen4 #timer_second{
-                --wi:calc(var(--fs) * 2 / 1.73);
+                --wi:calc(var(--fs) * 2 / 1.74);
             }
 
             #timer_hour{
@@ -487,6 +487,14 @@
                                     <ul>
                                         <li><p>ライセンスをCC BY-SA 4.0からCC BY 4.0へ変更。</p></li>
                                         <li><p>タイマーのレンダリング修正・変更</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.2.5 stable2</summary>
+                                    <ul>
+                                        <li>フォントバグ修正</li>
                                     </ul>
                                 </details>
                             </li>
