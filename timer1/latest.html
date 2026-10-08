@@ -2,7 +2,7 @@
 <html lang=ja>
     <head>
         <meta charset=utf-8>
-        <title>デジタルタイマー / Digital Timer v1.2.4</title>
+        <title>デジタルタイマー / Digital Timer v1.2.5</title>
         <style>
             html{
                 width:100vw;
@@ -14,6 +14,8 @@
             }
             .boldtext{
                 font-family:sans-serif,system-ui !important;
+                font-feature-settings: "tnum" 1 !important;
+                font-variant-numeric: tabular-nums !important;
                 font-weight:700;
             }
             #timer_grtop{
@@ -396,12 +398,112 @@
                 <div id="about_top">
                     <p>About - Online Digital Timer</p>
                     <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
+                    <p>Online Digital Timer v1.2.5 Stable Version</p>
+                    <details>
+                        <summary>history</summary>
+                        <ul>
+                            <li>
+                                <details>
+                                    <summary>v1.0.0</summary>
+                                    <p>初のタイマー。hh:mm:ss表示のみで、まだ動かすことが出来なかった。あくまでもCSSもテストバージョン。(非公開)</p>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.1.0</summary>
+                                    <p>追加・変更内容</p>
+                                    <ul>
+                                        <li><p>hh:ssモード(タイマー表示設定 > hh:ss)</p></li>
+                                        <li><p>自動切り替えモード(タイマー表示設定 > 自動)</p></li>
+                                        <li><p>メイン制御システム・描画処理関数、その他関数</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.1.1</summary>
+                                    <p>追加・変更内容</p>
+                                    <ul>
+                                        <li><p>JavaScript拡張</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.2.0</summary>
+                                    <p>追加・変更内容</p>
+                                    <ul>
+                                        <li><p>バグ修正</p></li>
+                                        <li><p>設定タブ追加</p></li>
+                                        <li><p>アラーム音機能追加</p></li>
+                                        <li><p>クイックメニュー追加(当時は「テンプレート」)</p></li>
+                                        <li><p>アラーム音自動停止機能追加(設定 > アラート継続時間)</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.2.1</summary>
+                                    <p>追加・変更内容</p>
+                                    <ul>
+                                        <li><p>バグ修正</p></li>
+                                        <li><p>クイックメニュー拡張</p></li>
+                                        <li><p>アラーム音試し聞き機能追加</p></li>
+                                        <li><p>アラーム音音量調整機能追加</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.2.2</summary>
+                                    <p>追加・変更内容</p>
+                                    <ul>    
+                                        <li><p>タイマー揃え機能追加(設定 > クイックメニュー > 揃える)</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.2.3</summary>
+                                    <ul>
+                                        <li><p>タイマーサイズ調整機能追加(設定 > サイズ調整)</p></li>
+                                        <li><p>詳細タブ(このタブ)追加(設定 > データ・情報 > 詳細)</p></li>
+                                        <li><p>初期化画面の謎のローディングスピナー追加(超手抜き)</p></li>
+                                        <li><p>設定タブのミニタイマー追加</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.2.4</summary>
+                                    <ul>
+                                        <li><p>タイマーのレンダリング修正・変更</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.2.5</summary>
+                                    <ul>
+                                        <li><p>ライセンスをCC BY-SA 4.0からCC BY 4.0へ変更。</p></li>
+                                        <li><p>タイマーのレンダリング修正・変更</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                        </ul>
+                    </details>
+                    <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
                     <p>© Online Digital Timer 2026 seed</p>
-                    <p>このプログラムは、CC-BY SA 4.0 Licenseにより公開されています。</p>
+                    <div style="text-align:center;">
+                        <a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener noreferer">
+                            <img src="https://licensebuttons.net/l/by/3.0/88x31.png" alt="クリエイティブ・コモンズ・ライセンス">
+                        </a>
+                    </div>
+                    <p>このプログラムは、CC BY 4.0 Licenseにより公開されています。</p>
                     <p>プログラムの学習に使ったり、このタイマーをベースにして新しいものを作ったり...</p>
                     <p>どうやって使っても良いです！楽しんで使ってください！</p>
                     <details>
-                        <summary>CC-BY SA 4.0 Licenseとは?</summary>
+                        <summary>CC BY 4.0 Licenseとは?</summary>
                         <p>簡単にまとめると、「商用利用もしていいし自由に使って良いよ！」というライセンスです。</p>
                         <p>ただし、使うときには「クレジットの表記」が必須となります。(使う人に見えるところに書くのがルールです。)</p>
                     </details>            
@@ -411,11 +513,12 @@
                         <li>一部のコード抜き取りなどはクレジット不必要</li>
                         <li>全体の抜き取り、このHTMLをベースとした改良の場合はクレジット必要(一番下の方にひっそり置くのでも良いです。見えれば良いです。)</li>
                     </ul>
+                    <p>正しく使いましょう。</p>
                     <details>
                         <summary>なぜ、わざわざCC-BY SA 4.0 License?</summary>
                         <p>それは、著作権の学習になればいいかなと思ったからです。</p>
                         <p>別にクレジットを書いてほしいとは何一つ思っていませんが、著作権表記を実際に練習してもらって実感するのがいいかなと思ったからです。</p>
-                        <p>別に書いてなかったって怒りません。練習や学習にでも役立てていただけると嬉しいです。</p>
+                        <p>練習や学習にでも役立てていただけると嬉しいです。</p>
                     </details>
                     <button class="btn" style="font-size:1rem;" onclick="menuel.about.close()">戻る</button>
                 </div>
