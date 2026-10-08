@@ -2,7 +2,7 @@
 <html lang=ja>
     <head>
         <meta charset=utf-8>
-        <title>デジタルタイマー / Digital Timer v1.2.5 stable2</title>
+        <title>デジタルタイマー / Digital Timer v1.2.6</title>
         <style>
             html{
                 width:100vw;
@@ -349,8 +349,11 @@
                             <form id="setting_sound" action="#" onsubmit="event.preventDefault()">
                                 <input type=range min=0 max=1 step=0.05 value=0.5 name="soundvolume" style="width:60%" />
                                 <span id="setting_soundvolume_print">現在の設定値: 50%</span>
-                                <span style="font-size:20px;display:flex;align-items:center;" />
-                                    <label><input type="radio" name="soundselect" value="s1" checked />サウンド1</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s1.play()" style="cursor:pointer;"></sp-e>
+                                <span style="font-size:20px;align-items:center;display:flex;flex-wrap:wrap" />
+                                    <label><input type="radio" name="soundselect" value="s1" checked />Alarm1</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s1.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
+                                    <label><input type="radio" name="soundselect" value="s2" checked />Alarm2</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s2.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
+                                    <label><input type="radio" name="soundselect" value="s3" checked />Piano1</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s3.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
+                                    <label><input type="radio" name="soundselect" value="s4" checked />Piano2</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s4.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
                                 </span>
                             </form>
                         </details>
@@ -498,6 +501,14 @@
                                     </ul>
                                 </details>
                             </li>
+                            <li>
+                                <details>
+                                    <summary>v1.2.3</summary>
+                                    <ul>
+                                        <li>アラーム音追加</li>
+                                    </ul>
+                                </details>
+                            </li>
                         </ul>
                     </details>
                     <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
@@ -555,9 +566,15 @@
             }
             const sounds_url={
                 s1:"https://ks-seed0310.github.io/audio_storage/kitchen_timer_alarm.txt",
+                s2:"https://ks-seed0310.github.io/audio_storage/kitchen_timer_bell.txt",
+                s3:"https://ks-seed0310.github.io/audio_storage/timer_melody_original.txt",
+                s4:"https://ks-seed0310.github.io/audio_storage/timer_melody_ode_to_joy_loop.txt",
             }
             const sounds_ts={
                 s1:"kitchen_timer_alarm",
+                s2:"kitchen_timer_bell",
+                s3:"timer_melody_original",
+                s4:"timer_melody_ode_to_joy_loop"
             }
             const sounds={
                 
