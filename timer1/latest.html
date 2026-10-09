@@ -11,9 +11,10 @@
             body{
                 max-width:100%;
                 min-height:100vh;
+                font-family:sans-serif;
             }
             .boldtext{
-                font-family:system-ui,sans-serif !important; /*font-family:sans-serif,system-ui !important;にしたら暴走したので気をつけて。(多分sans-serifフォントが暴走した)絶対に変えないように。*/
+                font-family:Roboto,system-ui,sans-serif !important;
                 font-feature-settings: "tnum" 1 !important;
                 font-variant-numeric: tabular-nums !important;
                 font-weight:700;
@@ -54,6 +55,8 @@
             }
             /*<dev-area> バグがなかったのでそのまま残す。*/
             /*.active2ではhourはそもそも描画しないが一応書いておく。*/
+            /*強制的に大きさを決めるとなんか壊れたから一時的に消してみる。*/
+            /*
             .active2.lastlen2 #timer_hour{
                 --wi:calc(var(--fs) * 2 / 1.74);
             }
@@ -129,6 +132,7 @@
                 width:var(--wi);
                 display:inline-block;
             }
+            */
             /*</dev-area> いい感じなので残す。display:inline-blockが重要。他に変えると壊れる。*/
             .btn{
                 border: 4px solid #afb1b5;
@@ -401,7 +405,7 @@
                 <div id="about_top">
                     <p>About - Online Digital Timer</p>
                     <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
-                    <p>Online Digital Timer v1.2.6 Stable Version</p>
+                    <p>Online Digital Timer v1.2.6 Stable Version 2</p>
                     <details>
                         <summary>history</summary>
                         <ul>
@@ -506,6 +510,14 @@
                                     <summary>v1.2.6</summary>
                                     <ul>
                                         <li>アラーム音追加</li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.2.6 stable2</summary>
+                                    <ul>
+                                        <li>Safariレンダリングバグ修正</li>
                                     </ul>
                                 </details>
                             </li>
