@@ -179,6 +179,7 @@
                 padding:0px;
                 border-radius:24px;
                 border:0px;
+                container-type:inline-size; /*cqwの基準に設定*/
             }
             #setting::backdrop{
                 background:rgba(0,0,0,0.5)
@@ -186,17 +187,17 @@
             #setting_top{
                 --max-width:100cqw; /*vwは全体の横幅、cqwは親要素の横幅*/
                 --padding:16px;
-                max-width:calc(var(--max-width)-var(--padding)*2);
-                width:calc(var(--max-width)-var(--padding)*2);
+                max-width:calc(var(--max-width) - var(--padding) * 2);
+                width:calc(var(--max-width) - var(--padding) * 2);
                 padding:var(--padding);
-                max-height:100%;
-                height:100%;
-                overflow-y:auto;
+                max-height:max-content;
+                min-height:100%;
                 border-radius:24px;
                 box-shadow:inset 0 0 0 2px #dfe1e5;
             }
             #setting_besideLineUp{
                 width:100%;
+                max-width:100cqw;
                 height:max-content;
                 display:flex;
                 justify-content:flex-start;
@@ -231,16 +232,16 @@
                 padding:0px;
                 border-radius:24px;
                 border:0px;
+                container-type:inline-size; /*cqwの基準に設定*/
             }
             #powerwash_screen_top{
                 --max-width:100cqw; /*vwは全体の横幅、cqwは親要素の横幅*/
                 --padding:16px;
-                max-width:calc(var(--max-width)-var(--padding)*2);
-                width:calc(var(--max-width)-var(--padding)*2);
+                max-width:calc(var(--max-width) - var(--padding) * 2);
+                width:calc(var(--max-width) - var(--padding) * 2);
                 padding:var(--padding);
-                max-height:100%;
-                height:100%;
-                overflow-y:auto;
+                max-height:max-content;
+                min-height:100%;
                 border-radius:24px;
                 box-shadow:inset 0 0 0 2px #dfe1e5;
             }
@@ -250,16 +251,16 @@
                 padding:0px;
                 border-radius:24px;
                 border:0px;
+                container-type:inline-size; /*cqwの基準に設定*/
             }
             #about_top{
                 --max-width:100cqw; /*vwは全体の横幅、cqwは親要素の横幅*/
                 --padding:16px;
-                max-width:calc(var(--max-width)-var(--padding)*2);
-                width:calc(var(--max-width)-var(--padding)*2);
+                max-width:calc(var(--max-width) - var(--padding) * 2);
+                width:calc(var(--max-width) - var(--padding) * 2);
                 padding:var(--padding);
-                max-height:100%;
-                height:100%;
-                overflow-y:auto;
+                max-height:max-content;
+                min-height:100%;
                 border-radius:24px;
                 box-shadow:inset 0 0 0 2px #dfe1e5;
             }
@@ -408,7 +409,7 @@
                 <div id="about_top">
                     <p>About - Online Digital Timer</p>
                     <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
-                    <p>Online Digital Timer v1.2.6 Stable Version 3</p>
+                    <p>Online Digital Timer v1.2.6 Stable Version 4</p>
                     <details>
                         <summary>history</summary>
                         <ul>
@@ -529,6 +530,15 @@
                                     <summary>v1.2.6 stable3</summary>
                                     <ul>
                                         <li><p>フォント追加</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.2.6 stable4</summary>
+                                    <ul>
+                                        <li><p>CSS修正</p></li>
+                                        <li><p>バグ修正</p></li>
                                     </ul>
                                 </details>
                             </li>
