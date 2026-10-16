@@ -2,7 +2,7 @@
 <html lang=ja>
     <head>
         <meta charset=utf-8>
-        <title>デジタルタイマー / Digital Timer v1.9.0</title>
+        <title>デジタルタイマー / Digital Timer v1.9.1</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -349,7 +349,7 @@
                 <div id="about_top" class="maindialog">
                     <p>About - Online Digital Timer</p>
                     <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
-                    <p>Online Digital Timer v1.8.0 (旧表記: v1.2.8 Stable Version 1)</p>
+                    <p>Online Digital Timer v1.9.1</p>
                     <details>
                         <summary>history</summary>
                         <ul>
@@ -503,6 +503,14 @@
                                     <ul>
                                         <li><p>音源追加</p></li>
                                         <li><p>メニュー一覧に簡易クイックメニュー追加</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.9.1</summary>
+                                    <ul>
+                                        <li><p>バグ修正</p></li>
                                     </ul>
                                 </details>
                             </li>
@@ -1212,9 +1220,25 @@
                 const m=Number(me.value)
                 const s=Number(se.value)
                 const score=h*3600+m*60+s
-                he.value=Math.floor(score/3600)
-                me.value=Math.floor(score%3600/60)
-                se.value=score%60
+                if (cf.active===3){
+                    he.value=Math.floor(score/3600)
+                    me.value=Math.floor(score%3600/60)
+                    se.value=score%60
+                }else if (cf.active===2){
+                    he.value=0
+                    me.value=Math.floor(score/60)
+                    se.value=score%60
+                }else if (cf.active===0){
+                    if (h===0){
+                        he.value=0
+                        me.value=Math.floor(score/60)
+                        se.value=score%60
+                    }else{
+                        he.value=Math.floor(score/3600)
+                        me.value=Math.floor(score%3600/60)
+                        se.value=score%60
+                    }
+                }
                 if (render){
                     timer_main_boot(true)
                     backup()
@@ -1307,6 +1331,8 @@
             menuel.reset.disabled=false
             menuel.stop.disabled=true
             /*/buttonsysの早めにやっておいたほうが良いもの*/
+            const autosave_stop=setInterval(backup,5000)
+            const buttonsys_stop=setInterval(buttonsys,100)
             !async function(){
                 await clockSoundLoad()
                 
@@ -1371,8 +1397,6 @@
                 timer_main_boot()
                 buttonsys()
             }()
-            const autosave_stop=setInterval(backup,5000)
-            const buttonsys_stop=setInterval(buttonsys,100)
         </script>
     </body>
 </html>
