@@ -2,7 +2,7 @@
 <html lang=ja>
     <head>
         <meta charset=utf-8>
-        <title>デジタルタイマー / Digital Timer v1.2.7</title>
+        <title>デジタルタイマー / Digital Timer v1.8.0</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -15,12 +15,16 @@
                 max-width:100%;
                 min-height:100vh;
                 font-family:sans-serif;
+                margin:0px;
             }
             .boldtext{
                 font-family:Roboto,monospace,system-ui,sans-serif !important;
                 font-feature-settings: "tnum" 1 !important;
                 font-variant-numeric: tabular-nums !important;
                 font-weight:700;
+            }
+            #timer_alltop{
+                background-color:#ffffff;
             }
             #timer_grtop{
                 text-align:center;
@@ -37,6 +41,12 @@
                 height:100%;
                 display:inline-block;
                 font-size:var(--fs);
+            }
+            #timer_view{
+                margin:8px;
+            }
+            #menuTop{
+                margin:8px;
             }
             #timer_top.active2.lastlen2{
                 --fs:calc(var(--width)/2.8);
@@ -171,13 +181,14 @@
     </head>
     <body>
         <div>
-            <div>
+            <div id="timer_alltop">
                 <div id="timer_view">
                     <div id="timer_grtop">
                         <span id="timer_top" class="boldtext active3 lastlen2"><span id="timer_hour">00</span><span id="hour_min_join"><sp-e s=8 mirror>:</sp-e></span><span id="timer_minute">00</span><span id="min_sec_join"><sp-e s=8 mirror>:</sp-e></span><span id="timer_second">00</span></span>
                     </div>
                 </div>
                 <div id="menuTop">
+                    <sp-e s=8></sp-e>
                     <button class="btn" id="start" title="タイマーを開始します。">開始</button>
                     <sp-e s=8></sp-e>
                     <button class="btn" id="stop" title="タイマーを停止します。">停止</button>
@@ -186,7 +197,12 @@
                     <sp-e s=8></sp-e>
                     <button class="btn" id="to_setting" title="設定画面を開きます。">設定</button>
                     <sp-e s=8></sp-e>
-                    <button class="btn" id="to_log" title="システムログを表示します。">Log</button>
+                    <button id="fullscreenChange" class="btn" style="margin:8px 0px;" title="全画面表示を切り替えます。">
+                        <sp-e s=0 template="fullscreen1" id="toFullscreen" style="display:block;"></sp-e>
+                        <sp-e s=0 template="fullscreen2" id="exitFullscreen" style="display:none;"></sp-e>
+                    </button>
+                    <br>
+                    
                 </div>
             </div>
             <dialog id="setting">
@@ -214,7 +230,7 @@
                                 </label>
                             </form>
                         </details>
-                        <details class="settingDetails">
+                        <details class="settingDetails" open>
                             <summary title="テンプレートから制限時間を選択、クリックで時間追加などができます。">クイックメニュー</summary>
                             <form id="setting_quickmenu" action="#" onsubmit="event.preventDefault()">
                                 <button onclick="btnpress('.qm1,.qm2');template_lim(0,0,0,false)" class="btnsmall qm1" enableAuto>リセット</button>
@@ -289,10 +305,7 @@
                             <summary title="データ消去などの保存データ関連の設定です。">データ・情報</summary>
                             <button class="btnsmall" id="powerwash" title="ブラウザに保存されている全ての保存データを削除します。">データ全消去</button>
                             <button class="btnsmall" id="to_about" title="このプログラムの詳細ページを開きます。">詳細</button>
-                        </details>
-                        <details class="settingDetails">
-                            <summary></summary>
-                            <button></button>
+                            <button class="btnsmall" id="to_log" title="システムログを表示します。">Log</button>
                         </details>
                         <button class="btn" id="to_home" style="font-size:1rem;" title="タイマーの画面に戻ります。">戻る</button>
                     </div>
@@ -317,31 +330,29 @@
                 <div id="about_top" class="maindialog">
                     <p>About - Online Digital Timer</p>
                     <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
-                    <p>Online Digital Timer v1.2.7 Stable Version 1</p>
+                    <p>Online Digital Timer v1.8.0 (旧表記: v1.2.8 Stable Version 1)</p>
                     <details>
                         <summary>history</summary>
                         <ul>
                             <li>
                                 <details>
-                                    <summary>v1.0.0</summary>
+                                    <summary>v1.0.0 (旧表記v1.0.0)</summary>
                                     <p>初のタイマー。hh:mm:ss表示のみで、まだ動かすことが出来なかった。あくまでもCSSもテストバージョン。(非公開)</p>
                                 </details>
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.1.0</summary>
-                                    <p>追加・変更内容</p>
+                                    <summary>v1.1.0 (旧表記v1.1.0)</summary>
                                     <ul>
-                                        <li><p>hh:ssモード(タイマー表示設定 > hh:ss)</p></li>
-                                        <li><p>自動切り替えモード(タイマー表示設定 > 自動)</p></li>
-                                        <li><p>メイン制御システム・描画処理関数、その他関数</p></li>
+                                        <li><p>hh:ssモード(タイマー表示設定 > hh:ss)追加</p></li>
+                                        <li><p>自動切り替えモード(タイマー表示設定 > 自動)追加</p></li>
+                                        <li><p>メイン制御システム・描画処理関数、その他関数追加</p></li>
                                     </ul>
                                 </details>
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.1.1</summary>
-                                    <p>追加・変更内容</p>
+                                    <summary>v1.2.0 (旧表記v1.1.1)</summary>
                                     <ul>
                                         <li><p>JavaScript拡張</p></li>
                                     </ul>
@@ -349,8 +360,7 @@
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.2.0</summary>
-                                    <p>追加・変更内容</p>
+                                    <summary>v1.3.0 (旧表記v1.2.0)</summary>
                                     <ul>
                                         <li><p>バグ修正</p></li>
                                         <li><p>設定タブ追加</p></li>
@@ -362,8 +372,7 @@
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.2.1</summary>
-                                    <p>追加・変更内容</p>
+                                    <summary>v1.4.0 (旧表記v1.2.1)</summary>
                                     <ul>
                                         <li><p>バグ修正</p></li>
                                         <li><p>クイックメニュー拡張</p></li>
@@ -374,8 +383,7 @@
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.2.2</summary>
-                                    <p>追加・変更内容</p>
+                                    <summary>v1.4.1 (旧表記v1.2.2)</summary>
                                     <ul>    
                                         <li><p>タイマー揃え機能追加(設定 > クイックメニュー > 揃える)</p></li>
                                     </ul>
@@ -383,7 +391,7 @@
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.2.3</summary>
+                                    <summary>v1.5.0 (旧表記v1.2.3)</summary>
                                     <ul>
                                         <li><p>タイマーサイズ調整機能追加(設定 > サイズ調整)</p></li>
                                         <li><p>詳細タブ(このタブ)追加(設定 > データ・情報 > 詳細)</p></li>
@@ -394,7 +402,7 @@
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.2.4</summary>
+                                    <summary>v1.5.1 (旧表記v1.2.4)</summary>
                                     <ul>
                                         <li><p>タイマーのレンダリング修正・変更</p></li>
                                     </ul>
@@ -402,7 +410,7 @@
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.2.5</summary>
+                                    <summary>v1.5.2 (旧表記v1.2.5)</summary>
                                     <ul>
                                         <li><p>ライセンスをCC BY-SA 4.0からCC BY 4.0へ変更。</p></li>
                                         <li><p>タイマーのレンダリング修正・変更</p></li>
@@ -411,7 +419,7 @@
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.2.5 stable2</summary>
+                                    <summary>v1.5.3 (旧表記v1.2.5 stable2)</summary>
                                     <ul>
                                         <li><p>フォントバグ修正</p></li>
                                     </ul>
@@ -419,7 +427,7 @@
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.2.6</summary>
+                                    <summary>v1.6.0 (旧表記v1.2.6)</summary>
                                     <ul>
                                         <li><p>アラーム音追加</p></li>
                                     </ul>
@@ -427,7 +435,7 @@
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.2.6 stable2</summary>
+                                    <summary>v1.6.1 (旧表記v1.2.6 stable2)</summary>
                                     <ul>
                                         <li><p>Safariレンダリングバグ修正</p></li>
                                     </ul>
@@ -435,7 +443,7 @@
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.2.6 stable3</summary>
+                                    <summary>v1.6.2 (旧表記v1.2.6 stable3)</summary>
                                     <ul>
                                         <li><p>フォント追加</p></li>
                                     </ul>
@@ -443,7 +451,7 @@
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.2.6 stable4</summary>
+                                    <summary>v1.6.3 (旧表記v1.2.6 stable4)</summary>
                                     <ul>
                                         <li><p>CSS修正</p></li>
                                         <li><p>バグ修正</p></li>
@@ -452,11 +460,21 @@
                             </li>
                             <li>
                                 <details>
-                                    <summary>v1.2.7</summary>
+                                    <summary>v1.7.0 (旧表記v1.2.7)</summary>
                                     <ul>
                                         <li><p>JS修正</p></li>
                                         <li><p>ログ表示システム追加</p></li>
                                         <li><p>一時停止を分かりやすくしました</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.8.0 (旧表記v1.2.8)</summary>
+                                    <ul>
+                                        <li><p>フルスクリーン画面にできる仕様追加</p></li>
+                                        <li><p>多くの修正</p></li>
+                                        <li><p>バージョン表記ルール変更(業界標準に合わせます)</p></li>
                                     </ul>
                                 </details>
                             </li>
@@ -522,7 +540,7 @@
                     <button class="btn" style="font-size:1rem;" onclick="menuel.about.close()">戻る</button>
                 </div>
             </dialog>
-            <dialog id="log" class="maindialog">
+            <dialog id="log" class="maindialog nbackdrop">
                 <div id="log_top" class="maindialog">
                     <p>ここにログが表示されます。</p>
                     <button class="btnsmall" id="log_return">戻る</button>
@@ -658,6 +676,8 @@
                 connectedCallback(){
                     const template_ts={
                         volumeIcon1:`<svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="11" fill="#619fcf" /><path d="M10.5 6L6.5 9.5H3.5v5h3l4 3.5V6z" fill="#ffffff" /><g fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 9a4 4 0 0 1 0 6" /><path d="M17.5 6.5a8 8 0 0 1 0 11" /></g></svg>`,
+                        fullscreen1:`<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 4.5H4.5v5L6.7 7.3l2.8 2.8 1.4-1.4-2.8-2.8z"/><path d="M14.5 4.5h5v5l-2.2-2.2-2.8 2.8-1.4-1.4 2.8-2.8z"/><path d="M4.5 14.5v5h5l-2.2-2.2 2.8-2.8-1.4-1.4-2.8 2.8z"/><path d="M19.5 14.5v5h-5l2.2-2.2-2.8-2.8 1.4-1.4 2.8 2.8z"/></svg>`,
+                        fullscreen2:`<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="scratch-fullscreen-exit-icon"><path d="M10 5v5H5l2.2-2.2-3.3-3.3 1.4-1.4 3.3 3.3z" /><path d="M14 5v5h5l-2.2-2.2 3.3-3.3-1.4-1.4-3.3 3.3z" /><path d="M10 19v-5H5l2.2 2.2-3.3 3.3 1.4 1.4 3.3-3.3z" /><path d="M14 19v-5h5l-2.2 2.2 3.3 3.3-1.4 1.4-3.3-3.3z" /></svg>`,
                     }
                     const size=this.getAttribute("s")
                     const mirror=this.getAttribute("mirror")!==null
@@ -679,6 +699,7 @@
             const g=_=>document.getElementById(_)
             const gc=_=>document.getElementsByClassName(_)
             const timer={
+                alltop:g("timer_alltop"),
                 top:g("timer_top"),
                 hour:g("timer_hour"),
                 min:g("timer_minute"),
@@ -706,6 +727,7 @@
                 firststart:true, //リセットしてから一番最初の開始:true else:false
                 stoped:true, // 止まっている/アラート音がなっている(タイマー自体が止まっている):true else:false
                 finished:true, //タイマーを停止した(アラート音を止めた):true else:false
+                fullscreen:false, //FullScreen:true else:false
             }
             function maincacheReset(){
                 maincache.start=0
@@ -797,6 +819,41 @@
                 timer.min.textContent=m.padStart(((active===2)?r:2),0)
                 timer.hour.textContent=h.padStart(((active===3)?r:2),0)
                 timer.setting_render.textContent="残り時間: "+timer.hour.textContent+":"+timer.min.textContent+":"+timer.sec.textContent
+            }
+            function timer_renderchange(){
+                let tg=0
+                let active=cf.active
+                if (cf.active===0){
+                    if (cf.hour===0){
+                        tg=cf.min
+                        toTimerActive2(false)
+                        active=2
+                    }else{
+                        tg=cf.hour
+                        toTimerActive3(false)
+                        active=3
+                    }
+                }else if (cf.active===2){
+                    tg=cf.min+cf.hour*60
+                    active=2
+                }else if (cf.active===3){
+                    tg=cf.hour
+                    active=3
+                }
+                const tgs=String(tg)
+                let rendermode;
+                timer.top.classList.remove("lastlen2","lastlen3","lastlen4")
+                if (tgs.length===1||tgs.length===2){
+                    timer.top.classList.add("lastlen2")
+                    rendermode=2
+                }else if (tgs.length===3){
+                    timer.top.classList.add("lastlen3")
+                    rendermode=3
+                }else if (tgs.length===4){
+                    timer.top.classList.add("lastlen4")    
+                    rendermode=4
+                }
+                return [rendermode,active]
             }
             async function timer_main(){
                 timer.top.style.opacity=1
@@ -892,12 +949,16 @@
                         }
                     }
                     if (log.some(x=>x===false))bootbad=true
-                    cf.hour=lim[0]
-                    cf.min=lim[1]
-                    cf.sec=lim[2]
+                    else{
+                        cf.hour=lim[0]
+                        cf.min=lim[1]
+                        cf.sec=lim[2]
+                    }
                 }
                 maincacheReset()
-                let tg=0
+                if (bootbad)return false
+                timer.top.style.opacity=1
+                /*let tg=0
                 let active=cf.active
                 if (cf.active===0){
                     if (cf.hour===0){
@@ -916,7 +977,6 @@
                     tg=cf.hour
                     active=3
                 }
-                if (bootbad)return false
                 const tgs=String(tg)
                 let rendermode;
                 timer.top.classList.remove("lastlen2","lastlen3","lastlen4")
@@ -929,7 +989,8 @@
                 }else if (tgs.length===4){
                     timer.top.classList.add("lastlen4")    
                     rendermode=4
-                }
+                }*/
+                const [rendermode,active]=timer_renderchange()
                 timer_render(cf.hour*3600+cf.min*60+cf.sec,rendermode,active)
             }
             function limupdate(){
@@ -956,6 +1017,9 @@
                 log:g("log"),
                 tolog:g("to_log"),
                 logreturn:g("log_return"),
+                fullscreen:g("fullscreenChange"),
+                to_fs:g("toFullscreen"),
+                exit_fs:g("exitFullscreen"),
             }
             const setel={
                 main:g("setting"),
@@ -1032,6 +1096,19 @@
             menuel.logreturn.addEventListener("click",e=>{
                 menuel.log.close()
             })
+            menuel.fullscreen.addEventListener("click",e=>{
+                if (maincache.fullscreen){
+                    menuel.to_fs.style.display="block"
+                    menuel.exit_fs.style.display="none"
+                    document.exitFullscreen()
+                    maincache.fullscreen=false
+                }else{
+                    menuel.to_fs.style.display="none"
+                    menuel.exit_fs.style.display="block"
+                    timer.alltop.requestFullscreen()
+                    maincache.fullscreen=true
+                }
+            })
             setel.main.addEventListener("click",e=>{
                 if (e.target===setel.main){
                     setel.main.close()
@@ -1067,16 +1144,24 @@
                 const H=setel.timelimit_h
                 const M=setel.timelimit_m
                 const S=setel.timelimit_s
-                H.value=add?(Number(H.value)+h):h
-                M.value=add?(Number(M.value)+m):m
-                S.value=add?(Number(S.value)+s):s
+                H.value=(add?(Number(H.value)+h):h)
+                M.value=(add?(Number(M.value)+m):m)
+                S.value=(add?(Number(S.value)+s):s)
                 if (maincache.stoped){
-                    timer_main_boot(true)
+                    timeLimitArrange(true)
+                    //timer_main_boot(true)
                     backup()
                 }else{
-                    cf.hour=Number(H.value)
-                    cf.min=Number(M.value)
-                    cf.sec=Number(S.value)
+                    const h2=Number(H.value)
+                    const m2=Number(M.value)
+                    const s2=Number(S.value)
+                    if (h2*3600+m2*60+s2<0){
+                        template_lim(0,0,0)
+                        return
+                    }
+                    cf.hour=h2
+                    cf.min=m2
+                    cf.sec=s2
                     cf.timerScore=cf.hour*3600+cf.min*60+cf.sec
                     timeLimitArrange(false)
                 }
@@ -1169,6 +1254,11 @@
                     setel.timelimit_s.disabled=true
                     setel.quickmenu_01.forEach(el=>{if(el.getAttribute("enableAuto")!=null)el.disabled=true})
                     setel.timerview.timerview.forEach(el=>el.disabled=true)
+                }
+                if (document.fullscreenEnabled){
+                    menuel.fullscreen.style.display="auto"
+                }else{
+                    menuel.fullscreen.style.display="none"
                 }
             }
             /*buttonsysの早めにやっておいたほうが良いもの*/
