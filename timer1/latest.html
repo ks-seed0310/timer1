@@ -2,7 +2,7 @@
 <html lang=ja>
     <head>
         <meta charset=utf-8>
-        <title>デジタルタイマー / Digital Timer v1.8.0</title>
+        <title>デジタルタイマー / Digital Timer v1.9.0</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -177,6 +177,18 @@
                 border-radius:24px;
                 box-shadow:inset 0 0 0 2px #dfe1e5;
             }
+            #miniquickmenu_main{
+                border: 1px solid #8f9195;
+                border-radius:32px;
+                font-size:32px;
+                padding:0px 4px 4px;
+                font-family:sans-serif;
+                background-color:#ffffff;
+                color:#000000;
+                padding-bottom:8px;
+                display:flex;
+                justify-content:flex-start;
+            }
         </style>
     </head>
     <body>
@@ -201,8 +213,14 @@
                         <sp-e s=0 template="fullscreen1" id="toFullscreen" style="display:block;"></sp-e>
                         <sp-e s=0 template="fullscreen2" id="exitFullscreen" style="display:none;"></sp-e>
                     </button>
-                    <br>
-                    
+                    <sp-e s=8></sp-e>
+                    <button id="miniquickmenu" class="btn" title="簡易的なクイックメニューを表示します。詳細的な指定を行う場合は設定タブより行ってください。">≡</button>
+                    <span id="miniquickmenu_main" style="display:none">
+                        <button onclick="btnpress('.qm1,.qm2');template_lim(0,0,30,true)" class="btnsmall qm2 miniquick" style="display:auto" enableAuto>+30秒</button>
+                        <button onclick="btnpress('.qm1,.qm2');template_lim(0,1,0,true)" class="btnsmall qm2 miniquick" style="display:auto" enableAuto>+1分</button>
+                        <button onclick="btnpress('.qm1,.qm2');template_lim(0,5,0,true)" class="btnsmall qm2 miniquick" style="display:auto" enableAuto>+5分</button>
+                        <button onclick="btnpress('.qm1,.qm2');template_lim(0,10,0,true)" class="btnsmall qm2 miniquick" style="display:auto" enableAuto>+10分</button>
+                    </span>
                 </div>
             </div>
             <dialog id="setting">
@@ -280,6 +298,7 @@
                                 <span style="font-size:20px;align-items:center;display:flex;flex-wrap:wrap" />
                                     <label><input type="radio" name="soundselect" value="s1" checked />Alarm1</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s1.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
                                     <label><input type="radio" name="soundselect" value="s2" checked />Alarm2</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s2.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
+                                    <label><input type="radio" name="soundselect" value="s5" checked />Alarm3</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s5.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
                                     <label><input type="radio" name="soundselect" value="s3" checked />Piano1</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s3.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
                                     <label><input type="radio" name="soundselect" value="s4" checked />Piano2</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s4.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
                                 </span>
@@ -478,6 +497,15 @@
                                     </ul>
                                 </details>
                             </li>
+                            <li>
+                                <details>
+                                    <summary>v1.9.0</summary>
+                                    <ul>
+                                        <li><p>音源追加</p></li>
+                                        <li><p>メニュー一覧に簡易クイックメニュー追加</p></li>
+                                    </ul>
+                                </details>
+                            </li>
                         </ul>
                     </details>
                     <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
@@ -591,12 +619,14 @@
                 s2:"https://ks-seed0310.github.io/audio_storage/kitchen_timer_bell.txt",
                 s3:"https://ks-seed0310.github.io/audio_storage/timer_melody_original.txt",
                 s4:"https://ks-seed0310.github.io/audio_storage/timer_melody_ode_to_joy_loop.txt",
+                s5:"https://ks-seed0310.github.io/audio_storage/timer_alarm_gemini01.txt",
             }
             const sounds_ts={
                 s1:"kitchen_timer_alarm",
                 s2:"kitchen_timer_bell",
                 s3:"timer_melody_original",
-                s4:"timer_melody_ode_to_joy_loop"
+                s4:"timer_melody_ode_to_joy_loop",
+                s5:"timer_alarm_gemini01",
             }
             const sounds={
                 
@@ -727,7 +757,6 @@
                 firststart:true, //リセットしてから一番最初の開始:true else:false
                 stoped:true, // 止まっている/アラート音がなっている(タイマー自体が止まっている):true else:false
                 finished:true, //タイマーを停止した(アラート音を止めた):true else:false
-                fullscreen:false, //FullScreen:true else:false
             }
             function maincacheReset(){
                 maincache.start=0
@@ -1020,6 +1049,8 @@
                 fullscreen:g("fullscreenChange"),
                 to_fs:g("toFullscreen"),
                 exit_fs:g("exitFullscreen"),
+                miniquickmenu:g("miniquickmenu"),
+                miniquickmenuMain:g("miniquickmenu_main"),
             }
             const setel={
                 main:g("setting"),
@@ -1097,17 +1128,24 @@
                 menuel.log.close()
             })
             menuel.fullscreen.addEventListener("click",e=>{
-                if (maincache.fullscreen){
-                    menuel.to_fs.style.display="block"
-                    menuel.exit_fs.style.display="none"
+                if (document.fullscreenElement){
                     document.exitFullscreen()
-                    maincache.fullscreen=false
                 }else{
+                    timer.alltop.requestFullscreen()
+                }
+            })
+            document.addEventListener("fullscreenchange",e=>{
+                if (document.fullscreenElement){
                     menuel.to_fs.style.display="none"
                     menuel.exit_fs.style.display="block"
-                    timer.alltop.requestFullscreen()
-                    maincache.fullscreen=true
+                }else{
+                    menuel.to_fs.style.display="block"
+                    menuel.exit_fs.style.display="none"
                 }
+            })
+            menuel.miniquickmenu.addEventListener("click",e=>{
+                //[...gc("miniquick")].forEach(el=>el.style.display=el.style.display==="none"?"inline-block":"none")
+                menuel.miniquickmenuMain.style.display=menuel.miniquickmenuMain.style.display==="none"?"inline-block":"none"
             })
             setel.main.addEventListener("click",e=>{
                 if (e.target===setel.main){
