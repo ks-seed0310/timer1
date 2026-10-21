@@ -4,7 +4,7 @@
         <meta charset=utf-8>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="色々な機能が備わったWebタイマーです。">
-        <title>デジタルタイマー / Digital Timer v1.11.0</title>
+        <title>デジタルタイマー / Digital Timer v1.11.1</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -219,6 +219,10 @@
                 overflow-y:auto;
                 min-width:90%;
             }
+            #setting_prealarm_timing_print *:focus{
+                outline: 2px solid #0066cc;
+                outline-offset: 2px;
+            }
             .el_gr_01{
                 border:0px;
                 background-color:#ffffff;
@@ -349,21 +353,21 @@
                                 <span id="setting_repeattime_print">現在の設定値: 1分</span>
                             </form>
                         </details>
-                        <details class="settingDetails"><!--v1.11.0 dev-->
+                        <details class="settingDetails">
                             <summary title="予告音の鳴らすタイミングの設定と音量調整・音源設定を行います。">予告音設定(dev)</summary>
                             <form id="setting_prealarm" action="#" onsubmit="event.preventDefault()">
                                 <br style="font-size:0.5rem;" />
+                                <div id="setting_prealarm_timing_print">
+                                    
+                                </div>
                                 <div id="setting_prealarm_timing">
-                                    <div id="setting_prealarm_timing_print">
-                                        
-                                    </div>
                                     <input type="number" name="timing" id="setting_prealarm_timing_h" class="inputNumberBox_s" min=0 value=0 />
                                     <sp-e s=8 style="cursor:text;" mirror>時間</sp-e>
                                     <input type="number" name="timing" id="setting_prealarm_timing_m" class="inputNumberBox_s" min=0 value=0 />
                                     <sp-e s=8 style="cursor:text;" mirror>分</sp-e>
                                     <input type="number" name="timing" id="setting_prealarm_timing_s" class="inputNumberBox_s" min=0 value=0 />
                                     <sp-e s=8 style="cursor:text;" mirror>秒</sp-e>
-                                    <button id="setting_prealarm_timing_p" class="btnsmall">追加</button>
+                                    <button id="setting_prealarm_timing_p" class="btnsmall" type="button">追加</button>
                                 </div>
                                 <br style="font-size:0.5rem;" />
                                 <div id="setting_prealarm_sound">
@@ -413,7 +417,7 @@
                 <div id="about_top" class="maindialog">
                     <p>About - Online Digital Timer</p>
                     <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
-                    <p>Online Digital Timer v1.11.0</p>
+                    <p>Online Digital Timer v1.11.1</p>
                     <details>
                         <summary>history</summary>
                         <ul>
@@ -595,6 +599,14 @@
                                     <ul>
                                         <li><p>Pre-Alarm追加(終了数分前にプレアラームが鳴る)</p></li>
                                         <li><p>バグ修正</p></li>
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <details>
+                                    <summary>v1.11.1</summary>
+                                    <ul>
+                                        <li><p>Pre-Alarm設定画面操作改善</p></li>
                                     </ul>
                                 </details>
                             </li>
@@ -1240,6 +1252,10 @@
                 el_b.append(el_d)
                 el.append(el_s,el_b)
                 outel.append(el)
+                el_d.blur()
+                el_b.blur()
+                el_s.blur()
+                el.blur()
             }
             function prealarmlistwrite(sec){
                 const h=Math.floor(sec/3600).toString().padStart(2,"0")
@@ -1471,11 +1487,29 @@
             setel.pretiming_h.addEventListener("input",e=>{
                 pretiminginput()
             })
+            setel.pretiming_h.addEventListener("keydown",e=>{
+                if (e.key==="Enter"){
+                    e.preventDefault()
+                    setel.pretiming_push.dispatchEvent(new Event("click"))
+                }
+            })
             setel.pretiming_m.addEventListener("input",e=>{
                 pretiminginput()
             })
+            setel.pretiming_m.addEventListener("keydown",e=>{
+                if (e.key==="Enter"){
+                    e.preventDefault()
+                    setel.pretiming_push.dispatchEvent(new Event("click"))
+                }
+            })
             setel.pretiming_s.addEventListener("input",e=>{
                 pretiminginput()
+            })
+            setel.pretiming_s.addEventListener("keydown",e=>{
+                if (e.key==="Enter"){
+                    e.preventDefault()
+                    setel.pretiming_push.dispatchEvent(new Event("click"))
+                }
             })
             setel.pretiming_push.addEventListener("click",e=>{
                 const score=Number(setel.pretiming_h.value)*3600+Number(setel.pretiming_m.value)*60+Number(setel.pretiming_s.value)
