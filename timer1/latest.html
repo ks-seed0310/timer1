@@ -2,7 +2,9 @@
 <html lang=ja>
     <head>
         <meta charset=utf-8>
-        <title>デジタルタイマー / Digital Timer v1.10.0</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="色々な機能が備わったWebタイマーです。">
+        <title>デジタルタイマー / Digital Timer v1.11.0</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -57,6 +59,7 @@
             #timer_top.active2.lastlen4{
                 --fs:calc(var(--width)/4.0);
             }
+            
             #timer_top.active3.lastlen2{
                 --fs:calc(var(--width)/4.2);
             }
@@ -144,9 +147,24 @@
                 border-radius: 8px;
                 padding: 8px 16px;
                 margin: 0px;
-                font-family:'Noto Sans JP' !important;
+                font-family:'Noto Sans JP',sans-serif !important;
                 margin-top:8px;
                 margin-bottom:8px;
+            }
+            .inputNumberBox[disabled]{
+                background-color:rgba(223,225,229,0.5);
+                color:rgba(0,0,0,0.3);
+            }
+            .inputNumberBox_s{
+                border: 3px solid #dfe1e5;
+                width:72px;
+                font-size:18px;
+                border-radius: 8px;
+                padding: 6px 12px;
+                margin: 0px;
+                font-family:'Noto Sans JP',sans-serif !important;
+                margin-top:6px;
+                margin-bottom:6px;
             }
             .inputNumberBox[disabled]{
                 background-color:rgba(223,225,229,0.5);
@@ -193,6 +211,20 @@
                 white-space:normal;
                 overflow-wrap:break-word;
                 word-break:break-all;
+            }
+            #setting_prealarm_timing_print{
+                border: 2px solid #dfe1e5;
+                min-height:220px;
+                max-height:220px;
+                overflow-y:auto;
+                min-width:90%;
+            }
+            .el_gr_01{
+                border:0px;
+                background-color:#ffffff;
+            }
+            .el_gr_01[disabled] .el_gr_01_child{
+                opacity:0.5;
             }
         </style>
     </head>
@@ -302,10 +334,10 @@
                                 <span id="setting_soundvolume_print">現在の設定値: 50%</span>
                                 <span style="font-size:20px;align-items:center;display:flex;flex-wrap:wrap" />
                                     <label><input type="radio" name="soundselect" value="s1" checked />Alarm1</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s1.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
-                                    <label><input type="radio" name="soundselect" value="s2" checked />Alarm2</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s2.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
-                                    <label><input type="radio" name="soundselect" value="s5" checked />Alarm3</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s5.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
-                                    <label><input type="radio" name="soundselect" value="s3" checked />Piano1</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s3.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
-                                    <label><input type="radio" name="soundselect" value="s4" checked />Piano2</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s4.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
+                                    <label><input type="radio" name="soundselect" value="s2" />Alarm2</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s2.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
+                                    <label><input type="radio" name="soundselect" value="s5" />Alarm3</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s5.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
+                                    <label><input type="radio" name="soundselect" value="s3" />Piano1</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s3.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
+                                    <label><input type="radio" name="soundselect" value="s4" />Piano2</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.s4.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
                                 </span>
                             </form>
                         </details>
@@ -315,6 +347,33 @@
                             <form id="setting_repeattime" action="#" onsubmit="event.preventDefault()">
                                 <input type=range min=0.5 max=30 step=0.5 value=1 name="repeattime" style="width:60%;" />
                                 <span id="setting_repeattime_print">現在の設定値: 1分</span>
+                            </form>
+                        </details>
+                        <details class="settingDetails"><!--v1.11.0 dev-->
+                            <summary title="予告音の鳴らすタイミングの設定と音量調整・音源設定を行います。">予告音設定(dev)</summary>
+                            <form id="setting_prealarm" action="#" onsubmit="event.preventDefault()">
+                                <br style="font-size:0.5rem;" />
+                                <div id="setting_prealarm_timing">
+                                    <div id="setting_prealarm_timing_print">
+                                        
+                                    </div>
+                                    <input type="number" name="timing" id="setting_prealarm_timing_h" class="inputNumberBox_s" min=0 value=0 />
+                                    <sp-e s=8 style="cursor:text;" mirror>時間</sp-e>
+                                    <input type="number" name="timing" id="setting_prealarm_timing_m" class="inputNumberBox_s" min=0 value=0 />
+                                    <sp-e s=8 style="cursor:text;" mirror>分</sp-e>
+                                    <input type="number" name="timing" id="setting_prealarm_timing_s" class="inputNumberBox_s" min=0 value=0 />
+                                    <sp-e s=8 style="cursor:text;" mirror>秒</sp-e>
+                                    <button id="setting_prealarm_timing_p" class="btnsmall">追加</button>
+                                </div>
+                                <br style="font-size:0.5rem;" />
+                                <div id="setting_prealarm_sound">
+                                    <input type=range min=0 max=1 step=0.05 value=0.5 name="soundvolume" style="width:60%" />
+                                    <span id="setting_prealarm_soundvolume_print">現在の設定値: 50%</span>
+                                    <span style="font-size:20px;align-items:center;display:flex;flex-wrap:wrap" />
+                                        <label><input type="radio" name="soundselect" value="p1" checked />Pre-Alarm1</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.p1.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
+                                        <label><input type="radio" name="soundselect" value="p2" />Pre-Alarm2</label><sp-e s=8 template="volumeIcon1" childstyle="display:flex;align-items:center;" title="このサウンドを再生する" onclick="sounds.p2.play()" style="cursor:pointer;"></sp-e><sp-e s=16></sp-e><br />
+                                </span>
+                                </div>
                             </form>
                         </details>
                         <details class="settingDetails">
@@ -354,7 +413,7 @@
                 <div id="about_top" class="maindialog">
                     <p>About - Online Digital Timer</p>
                     <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
-                    <p>Online Digital Timer v1.10.0</p>
+                    <p>Online Digital Timer v1.11.0</p>
                     <details>
                         <summary>history</summary>
                         <ul>
@@ -530,6 +589,15 @@
                                     </ul>
                                 </details>
                             </li>
+                            <li>
+                                <details>
+                                    <summary>v1.11.0</summary>
+                                    <ul>
+                                        <li><p>Pre-Alarm追加(終了数分前にプレアラームが鳴る)</p></li>
+                                        <li><p>バグ修正</p></li>
+                                    </ul>
+                                </details>
+                            </li>
                         </ul>
                     </details>
                     <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
@@ -637,14 +705,18 @@
                 s3:"https://ks-seed0310.github.io/audio_storage/timer_melody_original.txt",
                 s4:"https://ks-seed0310.github.io/audio_storage/timer_melody_ode_to_joy_loop.txt",
                 s5:"https://ks-seed0310.github.io/audio_storage/timer_alarm_gemini01.txt",
+                p1:"https://ks-seed0310.github.io/audio_storage/preAlarm_gemini01.txt",
+                p2:"https://ks-seed0310.github.io/audio_storage/pipon_time_signal.txt",
                 countdown1:"https://ks-seed0310.github.io/audio_storage/countdown_beep.txt",
             }
-            const sounds_ts={
+            const sounds_ts={// sx:sound(alarm) px:sound(pre-alarm)
                 s1:"kitchen_timer_alarm",
                 s2:"kitchen_timer_bell",
                 s3:"timer_melody_original",
                 s4:"timer_melody_ode_to_joy_loop",
                 s5:"timer_alarm_gemini01",
+                p1:"preAlarm_gemini01.txt",
+                p2:"pipon_time_signal",
                 countdown1:"countdown_beep",
             }
             const sounds={
@@ -672,10 +744,10 @@
                             }
                         }else if(navigator.onLine&&(reload||!await cache.match(k))){
                             console.log(2)
-                            const re=await fetch(url)
+                            const re=await fetch(url+(reload?("?"+Date.now()):""))
                             if (re.status!==200){
-                                console.log("fetch_not_200")
-                                throw new Error("HTTP Status Code 404 Error.")
+                                console.log("HTTP Status Code "+re.status+" Error. (code: "+key+")")
+                                throw new Error("HTTP Status Code "+re.status+" Error.")
                             }
                             if (location.protocol.includes("http")){
                                 cache.put(k,re.clone())
@@ -722,15 +794,16 @@
                     })
                 })
             }
-            function stopsound(audio){
+            function stopsound(audio,reset=true){
                 if (!audio)return false
                 audio.pause()
                 audio.currentTime=0
                 audio.onended=null
                 audio.onerror=null
+                if (reset)audio.load()
             }
-            function volumechange(audio){
-                audio.volume=cf.volume
+            function volumechange(audio,volume){
+                audio.volume=volume??cf.volume
             }
             class HTMLSpaceElement extends HTMLElement{
                 connectedCallback(){
@@ -738,6 +811,7 @@
                         volumeIcon1:`<svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="11" fill="#619fcf" /><path d="M10.5 6L6.5 9.5H3.5v5h3l4 3.5V6z" fill="#ffffff" /><g fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 9a4 4 0 0 1 0 6" /><path d="M17.5 6.5a8 8 0 0 1 0 11" /></g></svg>`,
                         fullscreen1:`<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 4.5H4.5v5L6.7 7.3l2.8 2.8 1.4-1.4-2.8-2.8z"/><path d="M14.5 4.5h5v5l-2.2-2.2-2.8 2.8-1.4-1.4 2.8-2.8z"/><path d="M4.5 14.5v5h5l-2.2-2.2 2.8-2.8-1.4-1.4-2.8 2.8z"/><path d="M19.5 14.5v5h-5l2.2-2.2-2.8-2.8 1.4-1.4 2.8 2.8z"/></svg>`,
                         fullscreen2:`<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="scratch-fullscreen-exit-icon"><path d="M10 5v5H5l2.2-2.2-3.3-3.3 1.4-1.4 3.3 3.3z" /><path d="M14 5v5h5l-2.2-2.2 3.3-3.3-1.4-1.4-3.3 3.3z" /><path d="M10 19v-5H5l2.2 2.2-3.3 3.3 1.4 1.4 3.3-3.3z" /><path d="M14 19v-5h5l-2.2 2.2 3.3 3.3-1.4 1.4-3.3-3.3z" /></svg>`,
+                        trashbox_red:`<svg viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="12" fill="#FF3B30" /><g stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M10.5 7V6a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1" /><path d="M7 7h10" /><path d="M8 7l0.7 9.5a1.5 1.5 0 0 0 1.5 1.5h3.6a1.5 1.5 0 0 0 1.5-1.5L16 7" /><path d="M10.5 10.5v4M13.5 10.5v4" /></g></svg>`,
                     }
                     const size=this.getAttribute("s")
                     const mirror=this.getAttribute("mirror")!==null
@@ -774,12 +848,16 @@
                 min:0,
                 sec:0,
                 volume:0.5,
+                prealarm_volume:0.5,
                 timerScore:0, //timerScore=hour*3600+min*60+sec
                 timerStop:0,
                 usesoundcode:"s1",
+                usepresoundcode:"p1",
                 repeattime_s:60,
                 timersize:1,
                 item_maxmin:{h:[0,9999],m:[0,59],s:[0,59]},
+                prealarm_sec:[],
+                countdownSoundActive:true, //5秒前カウントダウンがアクティブか(まだ使ってない)
             }
             const maincache={
                 start:0,
@@ -788,7 +866,8 @@
                 stoped:true, // 止まっている/アラート音がなっている(タイマー自体が止まっている):true else:false
                 finished:true, //タイマーを停止した(アラート音を止めた):true else:false
                 ractive:3, //テスト用(cf.activeの「描画状況」を示す)
-                cdnotplayed:[1,2,3,4,5], //まだ音源を鳴らしていない音
+                cdnotplayed:[1,2,3,4,5], //まだカウントダウン音源を鳴らしていない音
+                panotplayed:structuredClone(cf.prealarm_sec), //Pre-Alarmをまだ鳴らしていない音
                 soundLoaded:false, //サウンドの読み込みが終わったらtrueに(リセットしない。一番最初のIFEEでのみ動かす。)
             }
             function maincacheReset(){
@@ -799,6 +878,11 @@
                 maincache.finished=true
                 maincache.ractive=3
                 maincache.cdnotplayed=[1,2,3,4,5]
+                maincache.panotplayed=structuredClone(cf.prealarm_sec)
+            }
+            function cdreset(){
+                maincache.cdnotplayed=[1,2,3,4,5]
+                maincache.panotplayed=structuredClone(cf.prealarm_sec)
             }
             function toTimerActive2(repl=true){
                 timer.hourMin.style.display="none"
@@ -891,7 +975,7 @@
                 let active=cf.active
                 if (cf.active===0){
                     if (cf.hour===0){
-                        tg=cf.min
+                        tg=cf.min+cf.hour*60
                         toTimerActive2(false)
                         active=2
                         maincache.ractive=2
@@ -927,9 +1011,13 @@
             }
             function timer_cdsound(time){
                 const t=Math.round(time)
-                if (maincache.cdnotplayed.includes(t)){
-                    maincache.cdnotplayed.splice(maincache.cdnotplayed.findIndex(i=>i===t),1)
+                if (cf.countdownSoundActive&&maincache.cdnotplayed.includes(t)){
+                    maincache.cdnotplayed.splice(maincache.cdnotplayed.indexOf(t),1)
                     playsound(sounds.countdown1)
+                }
+                if (maincache.panotplayed.includes(t)){
+                    maincache.panotplayed.splice(maincache.panotplayed.indexOf(t),1)
+                    playsound(sounds[cf.usepresoundcode])
                 }
             }
             async function timer_main(){
@@ -975,12 +1063,12 @@
                     //console.log(score,performance.now(),maincache.start,maincache.sub)
                     timer_render(Math.round(score),r,active)
                     timer_cdsound(score)
-                    if (score<=0.4||maincache.stoped){
+                    if (score<=0||maincache.stoped){
                         maincache.stoped=true
                         timer_render(0,r,active)
                         clearInterval(cf.timerStop)
                     }
-                },200)
+                },100)
                 await new Promise(r=>{
                     const stop=setInterval(()=>{
                         if (maincache.stoped){
@@ -989,9 +1077,10 @@
                         }
                     },100)
                 })
+                if (lastscore==undefined){return}
                 maincache.sub=(cf.timerScore-lastscore)*1000
                 //console.log("maincache sub:",maincache.sub)
-                if (lastscore<=0.5){
+                if (lastscore<=0.1){
                     timer_render(0,r,false)
                     await timer_finish()
                     maincache.finished=true
@@ -1118,6 +1207,46 @@
                 timersize:g("setting_timersize"),
                 timersize_print:g("setting_timersize_print"),
                 timersize_reset:g("setting_timersize_reset"),
+                prealarm:g("setting_prealarm"),
+                prealarmvolumeprint:g("setting_prealarm_soundvolume_print"),
+                prealarmtimingprint:g("setting_prealarm_timing_print"),
+                pretiming_h:g("setting_prealarm_timing_h"),
+                pretiming_m:g("setting_prealarm_timing_m"),
+                pretiming_s:g("setting_prealarm_timing_s"),
+                pretiming_push:g("setting_prealarm_timing_p"),
+            }
+            function pretimingpush(txt,func="",outelm=setel.prealarmtimingprint){
+                const outel=outelm||setel.prealarmtimingprint
+                const el=document.createElement("div")
+                el.style.fontSize="20px"
+                el.style.alignItems="center"
+                el.style.display="flex"
+                el.style.flexWrap="wrap"
+                el.style.paddingLeft="16px"
+                el.style.paddingTop="4px"
+                const el_s=document.createElement("span")
+                el_s.textContent=txt
+                el_s.style.fontSize="20px"
+                const el_d=document.createElement("sp-e")
+                el_d.setAttribute("template","trashbox_red")
+                el_d.setAttribute("childstyle","display:flex;align-items:center;")
+                el_d.setAttribute("s",8)
+                el_d.classList.add("el_gr_01_child")
+                const el_b=document.createElement("button")
+                el_b.setAttribute("onclick",`this.parentElement.remove();${func}`)
+                el_b.setAttribute("title","設定項目を削除")
+                el_b.classList.add("el_gr_01")
+                
+                el_b.append(el_d)
+                el.append(el_s,el_b)
+                outel.append(el)
+            }
+            function prealarmlistwrite(sec){
+                const h=Math.floor(sec/3600).toString().padStart(2,"0")
+                const m=Math.floor(sec%3600/60).toString().padStart(2,"0")
+                const s=Math.floor(sec%60).toString().padStart(2,"0")
+                const t=`${h}:${m}:${s}`
+                pretimingpush(t,"cf.prealarm_sec.splice(cf.prealarm_sec.indexOf("+sec+"))")
             }
             menuel.start.addEventListener("click",e=>{
                 menuel.start.disabled=true
@@ -1129,6 +1258,7 @@
                 menuel.stop.disabled=true
                 maincache.stoped=true
                 clearInterval(cf.timerStop)
+                cdreset()
                 if (maincache.stoped&&!maincache.finished){
                     maincache.finished=true
                 }
@@ -1234,10 +1364,8 @@
                 H.value=(add?(Number(H.value)+h):h)
                 M.value=(add?(Number(M.value)+m):m)
                 S.value=(add?(Number(S.value)+s):s)
-                if (maincache.stoped){
+                if (/*maincache.stoped*/false){//ただの名残。旧バージョンではtimeLimitArrangeや周辺が弱かったため分けていたが今は周辺が発達している為いらない。
                     timeLimitArrange(true)
-                    //timer_main_boot(true)
-                    backup()
                 }else{
                     const h2=Number(H.value)
                     const m2=Number(M.value)
@@ -1249,9 +1377,9 @@
                     cf.hour=h2
                     cf.min=m2
                     cf.sec=s2
-                    maincache.cdnotplayed=[1,2,3,4,5]
+                    cdreset()
                     cf.timerScore=cf.hour*3600+cf.min*60+cf.sec
-                    timeLimitArrange(false)
+                    timeLimitArrange(maincache.stoped)
                 }
             }
             function timeLimitArrange(render=true){
@@ -1291,7 +1419,7 @@
                     //音量調整
                     cf.volume=Number(e.target.value)
                     setel.soundvolumeprint.textContent="現在の設定値: "+Math.floor(e.target.value*100)+"%"
-                    sounds_k.forEach(name=>volumechange(sounds[name]))
+                    sounds_k.forEach(name=>{if(name.startsWith("s")){volumechange(sounds[name])}})
                     backup()
                 }else if (e.target.name==="soundselect"){
                     //サウンド決定処理
@@ -1315,6 +1443,47 @@
                 setel.timersize.timersize.value=1
                 timer.top.style.zoom=1
             })
+            setel.prealarm.addEventListener("input",e=>{
+                if (e.target.name==="soundvolume"){
+                    //音量調整
+                    cf.prealarm_volume=Number(e.target.value)
+                    setel.prealarmvolumeprint.textContent="現在の設定値: "+Math.floor(e.target.value*100)+"%"
+                    sounds_k.forEach(name=>{if(name.startsWith("p")){volumechange(sounds[name],cf.prealarm_volume)}})
+                    backup()
+                }else if (e.target.name==="soundselect"){
+                    //サウンド決定処理
+                    cf.usepresoundcode=e.target.value
+                    backup()
+                }
+            })
+            function pretiminginput(){
+                const he=setel.pretiming_h
+                const me=setel.pretiming_m
+                const se=setel.pretiming_s
+                const hv=Math.floor(Number(he.value))
+                const mv=Math.floor(Number(me.value))
+                const sv=Math.floor(Number(se.value))
+                const sc=hv*3600+mv*60+sv
+                he.value=Math.floor(sc/3600)
+                me.value=Math.floor(sc%3600/60)
+                se.value=sc%60
+            }
+            setel.pretiming_h.addEventListener("input",e=>{
+                pretiminginput()
+            })
+            setel.pretiming_m.addEventListener("input",e=>{
+                pretiminginput()
+            })
+            setel.pretiming_s.addEventListener("input",e=>{
+                pretiminginput()
+            })
+            setel.pretiming_push.addEventListener("click",e=>{
+                const score=Number(setel.pretiming_h.value)*3600+Number(setel.pretiming_m.value)*60+Number(setel.pretiming_s.value)
+                if (!cf.prealarm_sec.includes(score)){
+                    cf.prealarm_sec.push(score)
+                    prealarmlistwrite(score)
+                }
+            })
             function backup(){
                 localStorage.setItem("/timer/v1/mainsave/rendering_active",maincache.ractive)
                 localStorage.setItem("/timer/v1/mainsave/cf",JSON.stringify(cf,0,0))
@@ -1331,9 +1500,9 @@
                         menuel.stop.disabled=false
                     }
                 }else{
-                    menuel.start.disabled=false
-                    menuel.reset.disabled=false
-                    menuel.stop.disabled=false
+                    menuel.start.disabled=true
+                    menuel.reset.disabled=true
+                    menuel.stop.disabled=true
                 }
                 if (timer.top.textContent==="00:00:00"||timer.top.textContent==="000:00:00"||timer.top.textContent==="0000:00:00"){
                     menuel.start.disabled=true
@@ -1367,14 +1536,7 @@
                     menuel.fullscreen.style.display="none"
                 }
             }
-            /*buttonsysの早めにやっておいたほうが良いもの*/
-            setel.timelimit_h.disabled=false
-            setel.timelimit_m.disabled=false
-            setel.timelimit_s.disabled=false
-            menuel.start.disabled=false
-            menuel.reset.disabled=false
-            menuel.stop.disabled=true
-            /*/buttonsysの早めにやっておいたほうが良いもの*/
+            buttonsys()
             const autosave_stop=setInterval(backup,5000)
             const buttonsys_stop=setInterval(buttonsys,100)
 
@@ -1413,7 +1575,13 @@
                     cf.volume=c.volume
                     setel.soundmain.soundvolume.value=c.volume
                     setel.soundvolumeprint.textContent="現在の設定値: "+Math.floor(c.volume*100)+"%"
-                    sounds_k.forEach(name=>volumechange(sounds[name]))
+                    sounds_k.forEach(name=>{if(name.startsWith("s")){volumechange(sounds[name])}})
+                }
+                if (c.prealarm_volume){
+                    cf.prealarm_volume=c.prealarm_volume
+                    setel.prealarm.soundvolume.value=c.prealarm_volume
+                    setel.prealarmvolumeprint.textContent="現在の設定値: "+Math.floor(c.prealarm_volume*100)+"%"
+                    sounds_k.forEach(name=>{if(name.startsWith("p")){volumechange(sounds[name],c.prealarm_volume)}})
                 }
                 if (c.timerScore){
                     cf.timerScore=c.timerScore
@@ -1436,8 +1604,19 @@
                     cf.usesoundcode=c.usesoundcode
                     setel.soundmain.soundselect.value=c.usesoundcode
                 }
+                if (c.usepresoundcode){
+                    cf.usepresoundcode=c.usepresoundcode
+                    setel.prealarm.soundselect.value=c.usepresoundcode
+                }
                 if (c.item_maxmin){
                     cf.item_maxmin=c.item_maxmin
+                }
+                if (c.prealarm_sec){
+                    cf.prealarm_sec=c.prealarm_sec
+                    c.prealarm_sec.forEach(prealarmlistwrite)
+                }
+                if (c.countdownSoundActive){
+                    cf.countdownSoundActive=c.countdownSoundActive
                 }
                 
                 setel.timerview.dispatchEvent(new Event("change"))
