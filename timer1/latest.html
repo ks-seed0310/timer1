@@ -1246,7 +1246,7 @@
                 const m=Math.floor(sec%3600/60).toString().padStart(2,"0")
                 const s=Math.floor(sec%60).toString().padStart(2,"0")
                 const t=`${h}:${m}:${s}`
-                pretimingpush(t,"cf.prealarm_sec.splice(cf.prealarm_sec.indexOf("+sec+"))")
+                pretimingpush(t,"cf.prealarm_sec.splice(cf.prealarm_sec.indexOf("+sec+"),1)")
             }
             menuel.start.addEventListener("click",e=>{
                 menuel.start.disabled=true
