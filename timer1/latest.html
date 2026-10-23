@@ -4,7 +4,7 @@
         <meta charset=utf-8>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="色々な機能が備わったWebタイマーです。">
-        <title>デジタルタイマー / Digital Timer v1.11.1</title>
+        <title>デジタルタイマー / Digital Timer v1.11.2</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@
                 margin:0px;
             }
             .boldtext{
-                font-family:Roboto,monospace,system-ui,sans-serif !important;
+                font-family:'Roboto',monospace,system-ui,sans-serif !important;
                 font-feature-settings: "tnum" 1 !important;
                 font-variant-numeric: tabular-nums !important;
                 font-weight:700;
@@ -354,7 +354,7 @@
                             </form>
                         </details>
                         <details class="settingDetails">
-                            <summary title="予告音の鳴らすタイミングの設定と音量調整・音源設定を行います。">予告音(プレアラーム)設定</summary>
+                            <summary title="予告音の鳴らすタイミングの設定と音量調整・音源設定を行います。">予告音設定(Pre-Alarm)</summary>
                             <form id="setting_prealarm" action="#" onsubmit="event.preventDefault()">
                                 <br style="font-size:0.5rem;" />
                                 <div id="setting_prealarm_timing_print">
@@ -363,9 +363,9 @@
                                 <div id="setting_prealarm_timing">
                                     <input type="number" name="timing" id="setting_prealarm_timing_h" class="inputNumberBox_s" min=0 value=0 />
                                     <sp-e s=8 style="cursor:text;" mirror>時間</sp-e>
-                                    <input type="number" name="timing" id="setting_prealarm_timing_m" class="inputNumberBox_s" min=0 value=0 />
+                                    <input type="number" name="timing" id="setting_prealarm_timing_m" class="inputNumberBox_s" min=-1 value=0 />
                                     <sp-e s=8 style="cursor:text;" mirror>分</sp-e>
-                                    <input type="number" name="timing" id="setting_prealarm_timing_s" class="inputNumberBox_s" min=0 value=0 />
+                                    <input type="number" name="timing" id="setting_prealarm_timing_s" class="inputNumberBox_s" min=-1 value=0 />
                                     <sp-e s=8 style="cursor:text;" mirror>秒</sp-e>
                                     <button id="setting_prealarm_timing_p" class="btnsmall" type="button">追加</button>
                                 </div>
@@ -417,7 +417,7 @@
                 <div id="about_top" class="maindialog">
                     <p>About - Online Digital Timer</p>
                     <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
-                    <p>Online Digital Timer v1.11.1</p>
+                    <p>Online Digital Timer v1.11.2</p>
                     <details>
                         <summary>history</summary>
                         <ul>
@@ -610,6 +610,16 @@
                                     </ul>
                                 </details>
                             </li>
+                            <li>
+                                <details>
+                                    <summary>v1.11.2</summary>
+                                    <ul>
+                                        <li><p>制限時間設定を使いやすく改善</p></li>
+                                        <li><p>予告音設定の予告音登録欄を使いやすく改善</p></li>
+                                        <li><p>その他バグ修正・改善</p></li>
+                                    </ul>
+                                </details>
+                            </li>
                         </ul>
                     </details>
                     <p> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </p>
@@ -786,8 +796,9 @@
                     }
                 }
             }
-            async function playsound(audio){
+            async function playsound(audio,audiostop=true){
                 if (!audio)return false
+                if (audiostop)stopsound(audio)
                 return new Promise((resolve,reject)=>{
                     audio.onended=()=>{
                         audio.onended=null
@@ -896,6 +907,17 @@
                 maincache.cdnotplayed=[1,2,3,4,5]
                 maincache.panotplayed=structuredClone(cf.prealarm_sec)
             }
+            function limupdate(){
+                const lim=cf.item_maxmin
+                const el=[...setel.timelimit.timelimit]
+                const key=["h","m","s"]
+                for (let i=0;i<3;i++){
+                    const e=el[i]
+                    const l=lim[key[i]]
+                    e.min=l[0]
+                    e.max=l[1]+1
+                }
+            }
             function toTimerActive2(repl=true){
                 timer.hourMin.style.display="none"
                 timer.hour.style.display="none"
@@ -904,6 +926,7 @@
                 if(repl)cf.active=2
                 maincache.ractive=2
                 cf.item_maxmin={h:[0,0],m:[0,9999],s:[0,59]}
+                limupdate()
             }
             function toTimerActive3(repl=true){
                 timer.hourMin.style.display=""
@@ -913,6 +936,7 @@
                 if(repl)cf.active=3
                 maincache.ractive=3
                 cf.item_maxmin={h:[0,9999],m:[0,59],s:[0,59]}
+                limupdate()
             }
             async function timer_finish(){
                 const audio=sounds[cf.usesoundcode]
@@ -1137,51 +1161,8 @@
                 maincacheReset()
                 if (bootbad)return false
                 timer.top.style.opacity=1
-                /*let tg=0
-                let active=cf.active
-                if (cf.active===0){
-                    if (cf.hour===0){
-                        tg=cf.min
-                        toTimerActive2(false)
-                        active=2
-                    }else{
-                        tg=cf.hour
-                        toTimerActive3(false)
-                        active=3
-                    }
-                }else if (cf.active===2){
-                    tg=cf.min
-                    active=2
-                }else if (cf.active===3){
-                    tg=cf.hour
-                    active=3
-                }
-                const tgs=String(tg)
-                let rendermode;
-                timer.top.classList.remove("lastlen2","lastlen3","lastlen4")
-                if (tgs.length===1||tgs.length===2){
-                    timer.top.classList.add("lastlen2")
-                    rendermode=2
-                }else if (tgs.length===3){
-                    timer.top.classList.add("lastlen3")
-                    rendermode=3
-                }else if (tgs.length===4){
-                    timer.top.classList.add("lastlen4")    
-                    rendermode=4
-                }*/
                 const [rendermode,active]=timer_renderchange()
                 timer_render(cf.hour*3600+cf.min*60+cf.sec,rendermode,active)
-            }
-            function limupdate(){
-                const lim=cf.item_maxmin
-                const el=[...setel.timelimit.timelimit]
-                const key=["h","m","s"]
-                for (let i=0;i<3;i++){
-                    const e=el[i]
-                    const l=lim[key[i]]
-                    e.min=l[0]
-                    e.max=l[1]
-                }
             }
 
             const menuel={
@@ -1258,9 +1239,9 @@
                 el.blur()
             }
             function prealarmlistwrite(sec){
-                const h=Math.floor(sec/3600).toString().padStart(2,"0")
-                const m=Math.floor(sec%3600/60).toString().padStart(2,"0")
-                const s=Math.floor(sec%60).toString().padStart(2,"0")
+                const h=Math.trunc(sec/3600).toString().padStart(2,"0")
+                const m=Math.trunc(sec%3600/60).toString().padStart(2,"0")
+                const s=Math.trunc(sec%60).toString().padStart(2,"0")
                 const t=`${h}:${m}:${s}`
                 pretimingpush(t,"cf.prealarm_sec.splice(cf.prealarm_sec.indexOf("+sec+"),1)")
             }
@@ -1396,6 +1377,10 @@
                     cdreset()
                     cf.timerScore=cf.hour*3600+cf.min*60+cf.sec
                     timeLimitArrange(maincache.stoped)
+                    if (maincache.stoped){
+                        timer_renderchange()
+                        limupdate()
+                    }
                 }
             }
             function timeLimitArrange(render=true){
@@ -1476,13 +1461,13 @@
                 const he=setel.pretiming_h
                 const me=setel.pretiming_m
                 const se=setel.pretiming_s
-                const hv=Math.floor(Number(he.value))
-                const mv=Math.floor(Number(me.value))
-                const sv=Math.floor(Number(se.value))
+                const hv=Math.trunc(Number(he.value))
+                const mv=Math.trunc(Number(me.value))
+                const sv=Math.trunc(Number(se.value))
                 const sc=hv*3600+mv*60+sv
-                he.value=Math.floor(sc/3600)
-                me.value=Math.floor(sc%3600/60)
-                se.value=sc%60
+                he.value=Math.max(0,Math.trunc(sc/3600))
+                me.value=Math.max(0,Math.trunc(sc%3600/60))
+                se.value=Math.max(0,sc%60)
             }
             setel.pretiming_h.addEventListener("input",e=>{
                 pretiminginput()
@@ -1490,7 +1475,9 @@
             setel.pretiming_h.addEventListener("keydown",e=>{
                 if (e.key==="Enter"){
                     e.preventDefault()
-                    setel.pretiming_push.dispatchEvent(new Event("click"))
+                    if (!setel.pretiming_push.disabled){
+                        setel.pretiming_push.dispatchEvent(new Event("click"))
+                    }
                 }
             })
             setel.pretiming_m.addEventListener("input",e=>{
@@ -1499,7 +1486,9 @@
             setel.pretiming_m.addEventListener("keydown",e=>{
                 if (e.key==="Enter"){
                     e.preventDefault()
-                    setel.pretiming_push.dispatchEvent(new Event("click"))
+                    if (!setel.pretiming_push.disabled){
+                        setel.pretiming_push.dispatchEvent(new Event("click"))
+                    }
                 }
             })
             setel.pretiming_s.addEventListener("input",e=>{
@@ -1508,7 +1497,9 @@
             setel.pretiming_s.addEventListener("keydown",e=>{
                 if (e.key==="Enter"){
                     e.preventDefault()
-                    setel.pretiming_push.dispatchEvent(new Event("click"))
+                    if (!setel.pretiming_push.disabled){
+                        setel.pretiming_push.dispatchEvent(new Event("click"))
+                    }
                 }
             })
             setel.pretiming_push.addEventListener("click",e=>{
@@ -1516,6 +1507,7 @@
                 if (!cf.prealarm_sec.includes(score)){
                     cf.prealarm_sec.push(score)
                     prealarmlistwrite(score)
+                    cdreset()
                 }
             })
             function backup(){
@@ -1557,12 +1549,16 @@
                     setel.timelimit_s.disabled=false
                     setel.quickmenu_01.forEach(el=>{if(el.getAttribute("enableAuto")!=null)el.disabled=false})
                     setel.timerview.timerview.forEach(el=>el.disabled=false)
+                    setel.prealarm.soundselect.forEach(el=>el.disabled=false)
+                    setel.pretiming_push.disabled=false
                 }else{
                     setel.timelimit_h.disabled=true
                     setel.timelimit_m.disabled=true
                     setel.timelimit_s.disabled=true
                     setel.quickmenu_01.forEach(el=>{if(el.getAttribute("enableAuto")!=null)el.disabled=true})
                     setel.timerview.timerview.forEach(el=>el.disabled=true)
+                    setel.prealarm.soundselect.forEach(el=>el.disabled=true)
+                    setel.pretiming_push.disabled=true
                 }
                 if (document.fullscreenEnabled){
                     menuel.fullscreen.style.display="auto"
